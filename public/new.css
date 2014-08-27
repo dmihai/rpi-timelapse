@@ -1,0 +1,9 @@
+ul.nav-pills {
+	margin-bottom: 15px;
+	margin-left: 50px;
+}
+label {
+	margin-bottom: 0;
+    padding-top: 7px;
+    text-align: right;
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>Camera Control</title>
+    <link href="bootstrap.min.css" rel="stylesheet">
+	<link href="new.css" rel="stylesheet">
+    <script src="jquery-1.11.1.min.js"></script>
+	<script src="functions.js"></script>
+  </head>
+  <body>
+    <div class="container">
+    
+      <ul class="nav nav-pills">
+        <li><a href="index.html">Interval</a></li>
+        <li class="active"><a href="#">Settings</a></li>
+        <li><a href="status.html">Status</a></li>
+      </ul>
+      
+      <form class="form-horizontal" role="form">
+        <div class="form-group">
+          <label for="aperture" class="col-xs-2 control-label">Aperture</label>
+          <div class="col-xs-2">
+            <input id="aperture" class="form-control" type="text" value="f/5.6" readonly>
+          </div>
+          <div class="col-xs-2">
+            <input class="btn btn-default" type="button" value="+" onclick="updateArray('aperture', apertureArr, 1)">
+            <input class="btn btn-default" type="button" value="-" onclick="updateArray('aperture', apertureArr, -1)">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="shutter" class="col-xs-2 control-label">Shutter</label>
+          <div class="col-xs-2">
+            <input id="shutter" class="form-control" type="text" value="1/10" readonly>
+          </div>
+          <div class="col-xs-2">
+            <input class="btn btn-default" type="button" value="+" onclick="updateArray('shutter', speedArr, 1)">
+            <input class="btn btn-default" type="button" value="-" onclick="updateArray('shutter', speedArr, -1)">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="iso" class="col-xs-2 control-label">ISO</label>
+          <div class="col-xs-2">
+            <input id="iso" class="form-control" type="text" value="200" readonly>
+          </div>
+          <div class="col-xs-2">
+            <input class="btn btn-default" type="button" value="+" onclick="updateArray('iso', isoArr, 1)">
+            <input class="btn btn-default" type="button" value="-" onclick="updateArray('iso', isoArr, -1)">
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-xs-4 col-xs-offset-2">
+            <button type="button" class="btn btn-default" onclick="updateSettings()">Update</button>
+          </div>
+        </div>
+      </form>
+    
+	<script>
+	$(document).ready(function() {
+		getSettings();
+	});
+	</script>
+
+    </div>
+  </body>
+</html>

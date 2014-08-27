@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>Camera Control</title>
+    <link href="bootstrap.min.css" rel="stylesheet">
+	<link href="new.css" rel="stylesheet">
+    <script src="jquery-1.11.1.min.js"></script>
+	<script src="functions.js"></script>
+  </head>
+  <body>
+    <div class="container">
+    
+      <ul class="nav nav-pills">
+        <li><a href="index.html">Interval</a></li>
+        <li><a href="settings.html">Settings</a></li>
+        <li class="active"><a href="#">Status</a></li>
+      </ul>
+      
+      <form class="form-horizontal" role="form">
+        <div class="form-group">
+          <label for="status" class="col-xs-2 control-label">Status</label>
+          <div class="col-xs-3">
+            <input id="status" class="form-control" type="text" value="" readonly>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="count" class="col-xs-2 control-label">Count</label>
+          <div class="col-xs-3">
+            <input id="count" class="form-control" type="text" value="" readonly>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="time" class="col-xs-2 control-label">Time</label>
+          <div class="col-xs-3">
+            <input id="time" class="form-control" type="text" value="" readonly>
+          </div>
+        </div>
+      </form>
+      
+      <div style="text-align: center;">
+        <button type="button" class="btn btn-default" onclick="shutdown()">Shutdown</button>
+      </div>
+
+    </div>
+    
+    <script>
+	$(document).ready(function() {
+        getStatus();
+		setInterval(function() {
+            getStatus();
+        }, 1000);
+	});
+	</script>
+
+  </body>
+</html>
