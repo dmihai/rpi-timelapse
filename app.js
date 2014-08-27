@@ -121,6 +121,7 @@ app.post('/api/settings/set', function(req, res) {
 });
 
 app.get('/api/settings/refresh', function(req, res) {
+    getCamera();
     res.status(200).send({
         aperture: settingsAperture,
         speed: settingsSpeed,
@@ -171,11 +172,15 @@ function disableShutter() {
 }
 
 function getCamera() {
-    GPhoto.list(function (list) {
-        if (list.length === 0) return;
-        camera = list[0];
+    if(camera == null) {
+        GPhoto.list(function (list) {
+            if (list.length === 0) return;
+            camera = list[0];
+            getCameraSettings();
+        });
+    }
+    else
         getCameraSettings();
-    });
 }
 
 function getCameraSettings() {
