@@ -33,6 +33,7 @@ app.post('/api/settings/set', settings.set);
 app.get('/api/settings/refresh', settings.refresh);
 
 app.get('/api/status/refresh', status.refresh);
+app.get('/api/status/cameras', status.cameras);
 app.post('/api/status/shutdown', status.shutdown);
 
 app.post('/api/test/shoot', test.shoot);
