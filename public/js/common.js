@@ -3,6 +3,23 @@ var speedArr = ["1/125", "1/100", "1/80", "1/60", "1/50", "1/40", "1/30", "1/25"
 var isoArr = ["100", "125", "160", "200", "250", "320", "400", "500", "640", "800", "1000", "1250", "1600", "2000", "2500", "3200", "4000", "5000", "6400"];
 var intervalArr = ["0.5", "0.6", "0.7", "0.8", "0.9", "1", "1.5", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "35", "40", "45", "50", "55", "60"];
 
+var cameraIndex = getParameterByName("camera") || 0;
+var camArr = [];
+
+$.ajax({
+    url: "/api/status/cameras",
+    dataType: 'json',
+    async: false,
+    success: function(data) {
+        camArr = data;
+    }
+});
+
+function getParameterByName(name) {
+    var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+}
+
 function updateValue(elem, delta) {
 	currentValue = getFieldInt(elem);
 	newValue = currentValue + delta;
@@ -39,12 +56,4 @@ function zeroFill(number, width)
 		return new Array( width + (/\./.test( number ) ? 2 : 1) ).join( '0' ) + number;
 	
 	return number + "";
-}
-
-function shoot() {
-    $.post("/api/test/shoot", {})
-    .done(function(data) {
-        if(data == 'OK') {
-        }
-    });
 }
