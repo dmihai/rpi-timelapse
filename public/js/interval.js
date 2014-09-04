@@ -5,7 +5,10 @@ var intervalStarted = false;
 var intervalPaused = false;
 
 function getInterval() {
-	$.getJSON("/api/interval/refresh", function(data) {
+	$.getJSON("/api/interval/refresh", {
+        camera: cameraIndex
+    })
+    .done(function(data) {
 		$("#delay").val(data.delay);
 		$("#interval").val(data.interval);
 		$("#count").val(data.shots);
@@ -27,6 +30,7 @@ function showIntervalButtons() {
 function startInterval() {
     if(!intervalStarted) {
         $.post("/api/interval/start", {
+            camera: cameraIndex,
             delay: $("#delay").val(),
             interval: $("#interval").val(),
             shots: $("#count").val()
@@ -42,7 +46,9 @@ function startInterval() {
 
 function pauseInterval() {
     if(intervalStarted && !intervalPaused) {
-        $.post("/api/interval/pause", {})
+        $.post("/api/interval/pause", {
+            camera: cameraIndex
+        })
         .done(function(data) {
             if(data == 'OK') {
                 intervalPaused = true;
@@ -54,7 +60,9 @@ function pauseInterval() {
 
 function resumeInterval() {
     if(intervalStarted && intervalPaused) {
-        $.post("/api/interval/resume", {})
+        $.post("/api/interval/resume", {
+            camera: cameraIndex
+        })
         .done(function(data) {
             if(data == 'OK') {
                 intervalPaused = false;
@@ -66,7 +74,9 @@ function resumeInterval() {
 
 function stopInterval() {
     if(intervalStarted) {
-        $.post("/api/interval/stop", {})
+        $.post("/api/interval/stop", {
+            camera:cameraIndex
+        })
         .done(function(data) {
             if(data == 'OK') {
                 intervalStarted = false;

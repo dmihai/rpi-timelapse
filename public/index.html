@@ -14,10 +14,13 @@
   <body>
     <div class="container">
     
+      <ul id="cameraMenu" class="nav nav-pills">
+      </ul>
+      
       <ul class="nav nav-pills">
-        <li class="active"><a href="#">Interval</a></li>
-        <li><a href="settings.html">Settings</a></li>
-        <li><a href="status.html">Status</a></li>
+        <li class="active"><a href="#" onclick="document.location='index.html?camera='+cameraIndex">Interval</a></li>
+        <li><a href="#" onclick="document.location='settings.html?camera='+cameraIndex">Settings</a></li>
+        <li><a href="#" onclick="document.location='status.html?camera='+cameraIndex">Status</a></li>
       </ul>
       
       <form class="form-horizontal" role="form">
@@ -71,6 +74,7 @@
 	<script>
 	$(document).ready(function() {
 		getInterval();
+        buildCameraMenu("index.html");
 		
 		$("#delay").on('change', function() {
 			updateTime();

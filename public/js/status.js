@@ -1,5 +1,8 @@
 function getStatus() {
-	$.getJSON("/api/status/refresh", function(data) {
+	$.getJSON("/api/status/refresh", {
+        camera: cameraIndex
+    })
+    .done(function(data) {
         intervalStarted = data.started;
         intervalPaused = data.paused;
         intervalInterval = data.interval;

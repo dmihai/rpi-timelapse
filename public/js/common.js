@@ -15,6 +15,16 @@ $.ajax({
     }
 });
 
+function buildCameraMenu(page) {
+    var menu = "";
+
+    for(var i = 0; i < camArr.length; i++) {
+        menu += '<li' + (camArr[i].index==cameraIndex ? ' class="active"' : '') + '><a href="' + page + '?camera=' + camArr[i].index + '">' + camArr[i].model + '</a></li>';
+    }
+
+    $("#cameraMenu").html(menu);
+}
+
 function getParameterByName(name) {
     var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
     return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
