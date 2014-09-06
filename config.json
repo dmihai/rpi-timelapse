@@ -1,0 +1,4 @@
+{
+    "shutdownCmd": "/sbin/shutdown -h now",
+    "convertPath": "/usr/bin/convert"
+}

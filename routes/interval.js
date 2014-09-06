@@ -2,28 +2,7 @@ exports.start = function(req, res) {
     res.set('Content-Type', 'text/plain');
     var camera = getRequestCamera(req);
     if(camera) {
-        if(!camera.isIntervalStarted()) {
-            camera.setIntervalDelay(parseInt(req.param('delay')));
-            camera.setIntervalInterval(req.param('interval'));
-            camera.setIntervalShots(parseInt(req.param('shots')));
-            camera.setIntervalStarted(true);
-            camera.setIntervalPaused(false);
-            camera.resetIntervalIndex();
-            
-            setTimeout(function() {
-                camera.setIntervalTimer(setInterval(function() {
-                    if(camera.isIntervalStarted() && !camera.isIntervalPaused()) {
-                        camera.incIntervalIndex();
-                        camera.takePicture();
-                        
-                        if(camera.getIntervalIndex() >= camera.getIntervalShots()) {
-                            clearInterval(camera.getIntervalTimer());
-                            camera.setIntervalStarted(false);
-                        }
-                    }
-                }, parseFloat(camera.getIntervalInterval()) * 1000));
-            }, camera.getIntervalDelay() * 1000);
-            
+        if(camera.intervalStart(req.param('delay'), req.param('interval'), req.param('shots'))) {
             res.status(200).send('OK');
         }
         else {
@@ -39,11 +18,7 @@ exports.stop = function(req, res) {
     res.set('Content-Type', 'text/plain');
     var camera = getRequestCamera(req);
     if(camera) {
-        if(camera.isIntervalStarted()) {
-            camera.setIntervalStarted(false);
-            camera.setIntervalPaused(false);
-            camera.resetIntervalIndex();
-            clearInterval(camera.getIntervalTimer());
+        if(camera.intervalStop()) {
             res.status(200).send('OK');
         }
         else {
@@ -59,8 +34,7 @@ exports.pause = function(req, res) {
     res.set('Content-Type', 'text/plain');
     var camera = getRequestCamera(req);
     if(camera) {
-        if(camera.isIntervalStarted() && !camera.isIntervalPaused()) {
-            camera.setIntervalPaused(true);
+        if(camera.intervalPause()) {
             res.status(200).send('OK');
         }
         else {
@@ -76,12 +50,11 @@ exports.resume = function(req, res) {
     res.set('Content-Type', 'text/plain');
     var camera = getRequestCamera(req);
     if(camera) {
-        if(camera.isIntervalStarted() && camera.isIntervalPaused()) {
-            camera.setIntervalPaused(false);
+        if(camera.intervalResume()) {
             res.status(200).send('OK');
         }
         else {
-            res.status(200).send('Not started or already paused');
+            res.status(200).send('Not started or already running');
         }
     }
     else {

@@ -12,6 +12,10 @@ module.exports = function(cam) {
     var settingsSpeed = null;
     var settingsIso = null;
     
+    var takePicture = function() {
+        console.log(camera.model + ": take picture");
+    }
+    
     this.getCameraSettings = function() {
         camera.getConfig(function (er, settings) {
             settingsAperture = settings.main.children['capturesettings'].children['f-number'].value;
@@ -26,10 +30,6 @@ module.exports = function(cam) {
         });
     }
     
-    this.takePicture = function() {
-        console.log(camera.model + ": take picture");
-    }
-
     this.changeAperture = function(newAperture) {
         camera.setConfigValue('f-number', newAperture, function (err) {
             if(!err) settingsAperture = newAperture;
@@ -46,6 +46,64 @@ module.exports = function(cam) {
         camera.setConfigValue('iso', newIso, function (err) {
             if(!err) settingsIso = newIso;
         });
+    }
+    
+    this.intervalStart = function(delay, interval, shots) {
+        if(intervalStarted)
+            return false;
+        
+        intervalDelay = parseInt(delay);
+        intervalInterval = interval;
+        intervalShots = parseInt(shots);
+        intervalStarted = true;
+        intervalPaused = false;
+        intervalIndex = 0;
+        
+        setTimeout(function() {
+            intervalTimer = setInterval(function() {
+                if(intervalStarted && !intervalPaused) {
+                    intervalIndex++;
+                    takePicture();
+                    
+                    if(intervalIndex >= intervalShots) {
+                        clearInterval(intervalTimer);
+                        intervalStarted = false;
+                    }
+                }
+            }, parseFloat(intervalInterval) * 1000);
+        }, intervalDelay * 1000);
+        
+        return true;
+    }
+    
+    this.intervalStop = function() {
+        if(!intervalStarted)
+            return false;
+        
+        intervalStarted = false;
+        intervalPaused = false;
+        intervalIndex = 0;
+        clearInterval(intervalTimer);
+        
+        return true;
+    }
+    
+    this.intervalPause = function() {
+        if(!intervalStarted || intervalPaused)
+            return false;
+        
+        intervalPaused = true;
+        
+        return true;
+    }
+    
+    this.intervalResume = function() {
+        if(!intervalStarted || !intervalPaused)
+            return false;
+        
+        intervalPaused = false;
+        
+        return true;
     }
     
     this.getSettingsAperture = function() {
@@ -86,41 +144,5 @@ module.exports = function(cam) {
 
     this.getIntervalIndex = function() {
         return intervalIndex;
-    }
-
-    this.getIntervalTimer = function() {
-        return intervalTimer;
-    }
-
-    this.setIntervalStarted = function(val) {
-        intervalStarted = val;
-    }
-
-    this.setIntervalPaused = function(val) {
-        intervalPaused = val;
-    }
-
-    this.setIntervalDelay = function(val) {
-        intervalDelay = val;
-    }
-    
-    this.setIntervalInterval = function(val) {
-        intervalInterval = val;
-    }
-    
-    this.setIntervalShots = function(val) {
-        intervalShots = val;
-    }
-    
-    this.incIntervalIndex = function() {
-        intervalIndex++;
-    }
-    
-    this.resetIntervalIndex = function() {
-        intervalIndex = 0;
-    }
-    
-    this.setIntervalTimer = function(val) {
-        intervalTimer = val;
     }
 }

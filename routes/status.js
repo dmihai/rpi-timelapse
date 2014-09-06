@@ -1,4 +1,5 @@
 var exec = require('child_process').exec;
+var config = require('../config');
 
 exports.refresh = function(req, res) {
     var camera = getRequestCamera(req);
@@ -28,6 +29,6 @@ exports.cameras = function(req, res) {
 }
 
 exports.shutdown = function(req, res) {
-    exec("/sbin/shutdown -h now", function(error, stdout, stderr) {});
+    exec(config.shutdownCmd, function(error, stdout, stderr) {});
     res.status(200).send('OK');
 }
