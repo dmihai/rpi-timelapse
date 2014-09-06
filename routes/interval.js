@@ -2,7 +2,7 @@ exports.start = function(req, res) {
     res.set('Content-Type', 'text/plain');
     var camera = getRequestCamera(req);
     if(camera) {
-        if(camera.intervalStart(req.param('delay'), req.param('interval'), req.param('shots'))) {
+        if(camera.intervalStart(req.param('delay'), req.param('interval'), req.param('shots'), (req.param('camera') || '0'))) {
             res.status(200).send('OK');
         }
         else {

@@ -1,3 +1,7 @@
+var fs = require('fs');
+var exec = require('child_process').exec;
+var config = require('./config');
+
 module.exports = function(cam) {
     var intervalStarted = false;
     var intervalPaused = false;
@@ -12,7 +16,19 @@ module.exports = function(cam) {
     var settingsSpeed = null;
     var settingsIso = null;
     
-    var takePicture = function() {
+    var takePicture = function(index) {
+        camera.takePicture({download: true}, function (er, data) {
+            var imageFile = 'camera_' + index;
+            var imagePath = __dirname + '/tmp/' + imageFile + '.jpg';
+            var histogramPath = __dirname + '/public/histo/' + imageFile + '.png';
+            
+            fs.writeFile(imagePath, data, function(err) {
+                if(err) throw err;
+                var histogramCmd = config.convertPath + " " + imagePath + " -define histogram:unique-colors=false histogram:" + histogramPath;
+                exec(histogramCmd, function(error, stdout, stderr) {});
+            });
+        });
+
         console.log(camera.model + ": take picture");
     }
     
@@ -48,7 +64,7 @@ module.exports = function(cam) {
         });
     }
     
-    this.intervalStart = function(delay, interval, shots) {
+    this.intervalStart = function(delay, interval, shots, index) {
         if(intervalStarted)
             return false;
         
@@ -63,7 +79,7 @@ module.exports = function(cam) {
             intervalTimer = setInterval(function() {
                 if(intervalStarted && !intervalPaused) {
                     intervalIndex++;
-                    takePicture();
+                    takePicture(index);
                     
                     if(intervalIndex >= intervalShots) {
                         clearInterval(intervalTimer);

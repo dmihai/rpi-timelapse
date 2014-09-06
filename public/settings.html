@@ -23,6 +23,10 @@
         <li><a href="#" onclick="document.location='status.html?camera='+cameraIndex">Status</a></li>
       </ul>
       
+      <div class="ac">
+        <img id="histogram" />
+      </div>
+      
       <form class="form-horizontal" role="form">
         <div class="form-group">
           <label for="aperture" class="col-xs-2 control-label">Aperture</label>
@@ -65,6 +69,10 @@
 	$(document).ready(function() {
 		getSettings();
         buildCameraMenu("settings.html");
+        updateHistogram();
+        setInterval(function() {
+            updateHistogram();
+        }, 1000);
 	});
 	</script>
 

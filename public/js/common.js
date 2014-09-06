@@ -67,3 +67,17 @@ function zeroFill(number, width)
 	
 	return number + "";
 }
+
+
+
+function shoot() {
+    $.post("/api/test/shoot", {
+        camera: cameraIndex
+    })
+    .done(function(data) {
+        if(data == 'OK') {
+            intervalPaused = true;
+            showIntervalButtons();
+        }
+    });
+}

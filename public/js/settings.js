@@ -21,3 +21,8 @@ function updateSettings() {
 			getSettings();
 	});
 }
+
+function updateHistogram() {
+    date = new Date();
+    $("#histogram").attr("src", "/histo/camera_" + cameraIndex + ".png?" + date.getTime());
+}

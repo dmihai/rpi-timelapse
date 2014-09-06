@@ -7,3 +7,12 @@ label {
     padding-top: 7px;
     text-align: right;
 }
+
+.ac {
+    text-align: center;
+}
+
+img#histogram {
+    margin-bottom: 10px;
+    border: 5px solid #505050;
+}
