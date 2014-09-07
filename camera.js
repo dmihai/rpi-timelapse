@@ -5,9 +5,9 @@ var config = require('./config');
 module.exports = function(cam) {
     var intervalStarted = false;
     var intervalPaused = false;
-    var intervalDelay = 5;
-    var intervalInterval = 1;
-    var intervalShots = 250;
+    var intervalDelay = config.intervalDelay;
+    var intervalInterval = config.intervalInterval;
+    var intervalShots = config.intervalShots;
     var intervalIndex = 0;
     var intervalTimer = null;
     
@@ -15,6 +15,44 @@ module.exports = function(cam) {
     var settingsAperture = null;
     var settingsSpeed = null;
     var settingsIso = null;
+    
+    var cameraParams = {};
+
+    var getConfigParams = function() {
+        var params = [];
+        var i;
+        
+        for(i = 0; i < config.cameraSettings.length; i++) {
+            if(camera.model.indexOf(config.cameraSettings[i].model) > -1) {
+                params = config.cameraSettings[i].params;
+                break;
+            }
+        }
+        
+        return params;
+    }
+    
+    var setCamera = function() {
+        var i;
+        var params = getConfigParams();
+        
+        camera.getConfig(function (er, settings) {
+            for(i = 0; i < params.length; i++) {
+                cameraParams[params[i].param] = settings.main.children[params[i].category].children[params[i].param].value;
+                camera.setConfigValue(params[i].param, params[i].value, function (er) {});
+            }
+            console.log(cameraParams);
+        });
+    }
+    
+    var resetCamera = function() {
+        var i;
+        var params = getConfigParams();
+        
+        for(i = 0; i < params.length; i++) {
+            camera.setConfigValue(params[i].param, cameraParams[params[i].param], function (er) {});
+        }
+    }
     
     var takePicture = function(index) {
         camera.takePicture({download: true}, function (er, data) {
@@ -68,6 +106,8 @@ module.exports = function(cam) {
         if(intervalStarted)
             return false;
         
+        setCamera();
+        
         intervalDelay = parseInt(delay);
         intervalInterval = interval;
         intervalShots = parseInt(shots);
@@ -95,6 +135,8 @@ module.exports = function(cam) {
     this.intervalStop = function() {
         if(!intervalStarted)
             return false;
+        
+        resetCamera();
         
         intervalStarted = false;
         intervalPaused = false;

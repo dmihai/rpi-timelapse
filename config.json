@@ -1,4 +1,49 @@
 {
     "shutdownCmd": "/sbin/shutdown -h now",
-    "convertPath": "/usr/bin/convert"
+    "convertPath": "/usr/bin/convert",
+    "intervalDelay": 5,
+    "intervalInterval": 10,
+    "intervalShots": 250,
+    "cameraSettings": [
+        {
+            "model": "D7000",
+            "params": [
+                {
+                    "category": "settings",
+                    "param": "capturetarget",
+                    "value": "Memory card"
+                },
+                {
+                    "category": "imgsettings",
+                    "param": "imagesize",
+                    "value": "2464x1632"
+                },
+                {
+                    "category": "capturesettings",
+                    "param": "imagequality",
+                    "value": "NEF+Basic"
+                }
+            ]
+        },
+        {
+            "model": "D5100",
+            "params": [
+                {
+                    "category": "settings",
+                    "param": "capturetarget",
+                    "value": "Memory card"
+                },
+                {
+                    "category": "capturesettings",
+                    "param": "imagequality",
+                    "value": "NEF+Basic"
+                },
+                {
+                    "category": "imgsettings",
+                    "param": "imagesize",
+                    "value": "2464x1632"
+                }
+            ]
+        }
+    ]
 }
