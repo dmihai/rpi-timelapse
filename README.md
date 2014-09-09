@@ -3,7 +3,7 @@ rpi-timelapse
 
 DSLR camera intervalometer for time lapse photography using Raspberry Pi. The plan is to run this in the field, so an usb external battery and a hotspot capable wi-fi dongle are required. You can connect multiple cameras to a single Raspberry Pi unit each through its own USB cable.
 
-I recommend to follow this article: http://raspberry-at-home.com/hotspot-wifi-access-point/ for setting up the access point on Raspberry Pi (also read the first comment by thomas).
+I recommend to follow this article: http://raspberry-at-home.com/hotspot-wifi-access-point/ for setting up the access point (also read the first comment by thomas). The interface can be accessed from any mobile device connected to the RPi hotspot by pointing a browser to RPi ip address on port 80 (ex: http://192.134.3.1).
 
 Features
 --------
