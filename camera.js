@@ -3,6 +3,8 @@ var exec = require('child_process').exec;
 var config = require('./config');
 
 module.exports = function(cam) {
+    var _this = this;
+    
     var intervalStarted = false;
     var intervalPaused = false;
     var intervalDelay = config.intervalDelay;
@@ -40,9 +42,10 @@ module.exports = function(cam) {
         camera.getConfig(function (er, settings) {
             for(i = 0; i < params.length; i++) {
                 cameraParams[params[i].param] = settings.main.children[params[i].category].children[params[i].param].value;
-                camera.setConfigValue(params[i].param, params[i].value, function (er) {});
+                camera.setConfigValue(params[i].param, params[i].value, function (err) {
+                    if(err) throw err;
+                });
             }
-            console.log(cameraParams);
         });
     }
     
@@ -51,7 +54,9 @@ module.exports = function(cam) {
         var params = getConfigParams();
         
         for(i = 0; i < params.length; i++) {
-            camera.setConfigValue(params[i].param, cameraParams[params[i].param], function (er) {});
+            camera.setConfigValue(params[i].param, cameraParams[params[i].param], function (err) {
+                if(err) throw err;
+            });
         }
     }
     
@@ -69,6 +74,17 @@ module.exports = function(cam) {
         });
 
         console.log(camera.model + ": take picture");
+    }
+    
+    var intervalTakePicture = function(index) {
+        if(intervalStarted && !intervalPaused) {
+            intervalIndex++;
+            takePicture(index);
+            
+            if(intervalIndex >= intervalShots) {
+                _this.intervalStop();
+            }
+        }
     }
     
     this.getCameraSettings = function() {
@@ -117,16 +133,9 @@ module.exports = function(cam) {
         intervalIndex = 0;
         
         setTimeout(function() {
+            intervalTakePicture(index);
             intervalTimer = setInterval(function() {
-                if(intervalStarted && !intervalPaused) {
-                    intervalIndex++;
-                    takePicture(index);
-                    
-                    if(intervalIndex >= intervalShots) {
-                        clearInterval(intervalTimer);
-                        intervalStarted = false;
-                    }
-                }
+                intervalTakePicture(index);
             }, parseFloat(intervalInterval) * 1000);
         }, intervalDelay * 1000);
         
