@@ -1,5 +1,4 @@
 var express = require('express');
-var gpio = require('rpi-gpio');
 var gphoto2 = require('gphoto2');
 var GPhoto = new gphoto2.GPhoto2();
 var bodyParser = require('body-parser');
@@ -37,33 +36,6 @@ app.get('/api/status/cameras', status.cameras);
 app.post('/api/status/shutdown', status.shutdown);
 
 app.post('/api/test/shoot', test.shoot);
-
-gpio.setup(7, gpio.DIR_OUT, function(err) {
-    if(err) throw err;
-});
-
-gpio.setup(11, gpio.DIR_OUT, function(err) {
-    if(err) throw err;
-});
-
-function enableShutter() {
-    gpio.write(7, true, function(err) {
-        if (err) throw err;
-        gpio.write(11, true, function(err) {
-            if (err) throw err;
-            setTimeout(disableShutter, 200);
-        });
-    });
-}
-
-function disableShutter() {
-    gpio.write(11, false, function(err) {
-        if (err) throw err;
-        gpio.write(7, false, function(err) {
-            if (err) throw err;
-        });
-    });
-}
 
 global.getRequestCamera = function(req) {
     if(req.param("camera"))
