@@ -20,10 +20,11 @@ module.exports = function(cam) {
 
     var getConfigParams = function() {
         var params = [];
-        var i;
+        var i, pattern;
         
         for(i = 0; i < config.cameraSettings.length; i++) {
-            if(camera.model.indexOf(config.cameraSettings[i].model) > -1) {
+            pattern = new RegExp(config.cameraSettings[i].model, "i");
+            if(pattern.test(camera.model)) {
                 params = config.cameraSettings[i].params;
                 break;
             }

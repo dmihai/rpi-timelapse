@@ -6,7 +6,7 @@
     "intervalShots": 250,
     "cameraSettings": [
         {
-            "model": "D7000",
+            "model": "nikon.*(d7000|d5100)",
             "params": [
                 {
                     "category": "settings",
@@ -22,26 +22,6 @@
                     "category": "capturesettings",
                     "param": "imagequality",
                     "value": "NEF+Basic"
-                }
-            ]
-        },
-        {
-            "model": "D5100",
-            "params": [
-                {
-                    "category": "settings",
-                    "param": "capturetarget",
-                    "value": "Memory card"
-                },
-                {
-                    "category": "capturesettings",
-                    "param": "imagequality",
-                    "value": "NEF+Basic"
-                },
-                {
-                    "category": "imgsettings",
-                    "param": "imagesize",
-                    "value": "2464x1632"
                 }
             ]
         }
