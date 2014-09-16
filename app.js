@@ -1,6 +1,5 @@
 var express = require('express');
 var gphoto2 = require('gphoto2');
-
 var bodyParser = require('body-parser');
 
 var Camera = require('./camera');
