@@ -1,6 +1,6 @@
 var express = require('express');
 var gphoto2 = require('gphoto2');
-var GPhoto = new gphoto2.GPhoto2();
+
 var bodyParser = require('body-parser');
 
 var Camera = require('./camera');
@@ -33,6 +33,7 @@ app.get('/api/settings/refresh', settings.refresh);
 
 app.get('/api/status/refresh', status.refresh);
 app.get('/api/status/cameras', status.cameras);
+app.get('/api/status/addCamera', status.addCamera);
 app.post('/api/status/shutdown', status.shutdown);
 
 app.post('/api/test/shoot', test.shoot);
@@ -44,9 +45,8 @@ global.getRequestCamera = function(req) {
 }
 
 global.refreshCameras = function() {
+    var GPhoto = new gphoto2.GPhoto2();
     GPhoto.list(function (list) {
-        if (list.length === 0) return;
-        
         var camera, found;
         var i, j;
         var newCamArr = [];
@@ -55,7 +55,7 @@ global.refreshCameras = function() {
             // check if camera already exists
             found = false;
             for(j = 0; j < camArr.length; j++) {
-                if(list[i].camera == camArr[j].getCamera().camera && list[i].port == camArr[j].getCamera().port) {
+                if(camArr[j].getCamera() && list[i].camera == camArr[j].getCamera().camera && list[i].port == camArr[j].getCamera().port) {
                     found = true;
                     newCamArr[newCamArr.length] = camArr[j];
                 }

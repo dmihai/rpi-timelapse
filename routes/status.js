@@ -22,7 +22,7 @@ exports.cameras = function(req, res) {
     for(var i = 0; i < camArr.length; i++) {
         cameras[cameras.length] = {
             index: i,
-            model: camArr[i].getCamera().model.replace(" (PTP mode)", "").replace(" DSC", "")
+            model: camArr[i].getCamera() ? camArr[i].getCamera().model.replace(" (PTP mode)", "").replace(" DSC", "") : "Generic camera"
         };
     }
     res.status(200).send(cameras);
