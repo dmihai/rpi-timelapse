@@ -28,6 +28,11 @@ exports.cameras = function(req, res) {
     res.status(200).send(cameras);
 }
 
+exports.addCamera = function(req, res) {
+    refreshCameras();
+    res.status(200).send('OK');
+}
+
 exports.shutdown = function(req, res) {
     exec(config.shutdownCmd, function(error, stdout, stderr) {});
     res.status(200).send('OK');

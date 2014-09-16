@@ -6,14 +6,18 @@ var intervalArr = ["0.5", "0.6", "0.7", "0.8", "0.9", "1", "1.5", "2", "3", "4",
 var cameraIndex = getParameterByName("camera") || 0;
 var camArr = [];
 
-$.ajax({
-    url: "/api/status/cameras",
-    dataType: 'json',
-    async: false,
-    success: function(data) {
-        camArr = data;
-    }
-});
+getCameras();
+
+function getCameras() {
+    $.ajax({
+        url: "/api/status/cameras",
+        dataType: 'json',
+        async: false,
+        success: function(data) {
+            camArr = data;
+        }
+    });
+}
 
 function buildCameraMenu(page) {
     var menu = "";
@@ -21,8 +25,22 @@ function buildCameraMenu(page) {
     for(var i = 0; i < camArr.length; i++) {
         menu += '<li' + (camArr[i].index==cameraIndex ? ' class="active"' : '') + '><a href="' + page + '?camera=' + camArr[i].index + '">' + camArr[i].model + '</a></li>';
     }
+    
+    menu += '<li><a href="#" onclick="javascript: refreshCameras(\'' + page + '\')">+</a></li>'
 
     $("#cameraMenu").html(menu);
+}
+
+function refreshCameras(page) {
+    $.get("/api/status/addCamera", {})
+    .done(function(data) {
+        if(data == 'OK') {
+            setTimeout(function() {
+                getCameras();
+                buildCameraMenu(page);
+            }, 2000);
+        }
+    });
 }
 
 function getParameterByName(name) {

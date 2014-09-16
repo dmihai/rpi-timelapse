@@ -43,7 +43,7 @@ global.getRequestCamera = function(req) {
     return camArr[0];
 }
 
-function refreshCameras() {
+global.refreshCameras = function() {
     GPhoto.list(function (list) {
         if (list.length === 0) return;
         
