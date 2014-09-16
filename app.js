@@ -49,23 +49,32 @@ function refreshCameras() {
         
         var camera, found;
         var i, j;
+        var newCamArr = [];
         
         for(i = 0; i < list.length; i++) {
-            list[i].camera;
-            list[i].port;
-            
             // check if camera already exists
             found = false;
-            for(j = 0; j < camArr.length; j++)
-                if(list[i].camera == camArr[j].getCamera().camera && list[i].port == camArr[j].getCamera().port)
+            for(j = 0; j < camArr.length; j++) {
+                if(list[i].camera == camArr[j].getCamera().camera && list[i].port == camArr[j].getCamera().port) {
                     found = true;
+                    newCamArr[newCamArr.length] = camArr[j];
+                }
+            }
             
             if(!found) {
                 camera = new Camera(list[i]);
-                camArr[camArr.length] = camera;
+                newCamArr[newCamArr.length] = camera;
                 camera.getCameraSettings();
             }
         }
+        
+        // if no camera found, add a generic camera
+        if(newCamArr.length == 0) {
+            camera = new Camera(null);
+            newCamArr[newCamArr.length] = camera;
+        }
+        
+        camArr = newCamArr;
     });
 }
 

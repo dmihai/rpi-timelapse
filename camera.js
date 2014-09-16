@@ -39,41 +39,49 @@ module.exports = function(cam) {
         var i;
         var params = getConfigParams();
         
-        camera.getConfig(function (er, settings) {
-            for(i = 0; i < params.length; i++) {
-                cameraParams[params[i].param] = settings.main.children[params[i].category].children[params[i].param].value;
-                camera.setConfigValue(params[i].param, params[i].value, function (err) {
-                    if(err) throw err;
-                });
-            }
-        });
+        if(camera != null) {
+            camera.getConfig(function (er, settings) {
+                for(i = 0; i < params.length; i++) {
+                    cameraParams[params[i].param] = settings.main.children[params[i].category].children[params[i].param].value;
+                    camera.setConfigValue(params[i].param, params[i].value, function (err) {
+                        if(err) throw err;
+                    });
+                }
+            });
+        }
     }
     
     var resetCamera = function() {
         var i;
         var params = getConfigParams();
         
-        for(i = 0; i < params.length; i++) {
-            camera.setConfigValue(params[i].param, cameraParams[params[i].param], function (err) {
-                if(err) throw err;
-            });
+        if(camera != null) {
+            for(i = 0; i < params.length; i++) {
+                camera.setConfigValue(params[i].param, cameraParams[params[i].param], function (err) {
+                    if(err) throw err;
+                });
+            }
         }
     }
     
     var takePicture = function(index) {
-        camera.takePicture({download: true}, function (er, data) {
-            var imageFile = 'camera_' + index;
-            var imagePath = __dirname + '/tmp/' + imageFile + '.jpg';
-            var histogramPath = __dirname + '/public/histo/' + imageFile + '.png';
-            
-            fs.writeFile(imagePath, data, function(err) {
-                if(err) throw err;
-                var histogramCmd = config.convertPath + " " + imagePath + " -define histogram:unique-colors=false histogram:" + histogramPath;
-                exec(histogramCmd, function(error, stdout, stderr) {});
+        if(camera != null) {
+            camera.takePicture({download: true}, function (er, data) {
+                var imageFile = 'camera_' + index;
+                var imagePath = __dirname + '/tmp/' + imageFile + '.jpg';
+                var histogramPath = __dirname + '/public/histo/' + imageFile + '.png';
+                
+                fs.writeFile(imagePath, data, function(err) {
+                    if(err) throw err;
+                    var histogramCmd = config.convertPath + " " + imagePath + " -define histogram:unique-colors=false histogram:" + histogramPath;
+                    exec(histogramCmd, function(error, stdout, stderr) {});
+                });
             });
-        });
 
-        console.log(camera.model + ": take picture");
+            console.log(camera.model + ": take picture");
+        }
+        else {
+        }
     }
     
     var intervalTakePicture = function(index) {
@@ -88,35 +96,43 @@ module.exports = function(cam) {
     }
     
     this.getCameraSettings = function() {
-        camera.getConfig(function (er, settings) {
-            settingsAperture = settings.main.children['capturesettings'].children['f-number'].value;
-            settingsSpeed = settings.main.children['capturesettings'].children['shutterspeed2'].value;
-            settingsIso = settings.main.children['imgsettings'].children['iso'].value;
-            
-            console.log("camera: " + camera.model);
-            console.log("port: " + camera.port);
-            console.log("aperture: " + settingsAperture);
-            console.log("speed: " + settingsSpeed);
-            console.log("iso: " + settingsIso);
-        });
+        if(camera != null) {
+            camera.getConfig(function (er, settings) {
+                settingsAperture = settings.main.children['capturesettings'].children['f-number'].value;
+                settingsSpeed = settings.main.children['capturesettings'].children['shutterspeed2'].value;
+                settingsIso = settings.main.children['imgsettings'].children['iso'].value;
+                
+                console.log("camera: " + camera.model);
+                console.log("port: " + camera.port);
+                console.log("aperture: " + settingsAperture);
+                console.log("speed: " + settingsSpeed);
+                console.log("iso: " + settingsIso);
+            });
+        }
     }
     
     this.changeAperture = function(newAperture) {
-        camera.setConfigValue('f-number', newAperture, function (err) {
-            if(!err) settingsAperture = newAperture;
-        });
+        if(camera != null) {
+            camera.setConfigValue('f-number', newAperture, function (err) {
+                if(!err) settingsAperture = newAperture;
+            });
+        }
     }
 
     this.changeSpeed = function(newSpeed) {
-        camera.setConfigValue('shutterspeed2', newSpeed, function (err) {
-            if(!err) settingsSpeed = newSpeed;
-        });
+        if(camera != null) {
+            camera.setConfigValue('shutterspeed2', newSpeed, function (err) {
+                if(!err) settingsSpeed = newSpeed;
+            });
+        }
     }
 
     this.changeIso = function(newIso) {
-        camera.setConfigValue('iso', newIso, function (err) {
-            if(!err) settingsIso = newIso;
-        });
+        if(camera != null) {
+            camera.setConfigValue('iso', newIso, function (err) {
+                if(!err) settingsIso = newIso;
+            });
+        }
     }
     
     this.intervalStart = function(delay, interval, shots, index) {
