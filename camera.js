@@ -169,6 +169,9 @@ module.exports = function(cam) {
         intervalPaused = false;
         intervalIndex = 0;
         
+        if(intervalTimer)
+            clearInterval(intervalTimer);
+        
         setTimeout(function() {
             intervalTakePicture(index);
             intervalTimer = setInterval(function() {
