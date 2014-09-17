@@ -11,6 +11,7 @@ module.exports = function(cam) {
     var intervalDelay = config.intervalDelay;
     var intervalInterval = config.intervalInterval;
     var intervalShots = config.intervalShots;
+    var intervalShutter = 'soft';
     var intervalIndex = 0;
     var intervalTimer = null;
     
@@ -85,7 +86,7 @@ module.exports = function(cam) {
     }
     
     var takePicture = function(index) {
-        if(camera != null) {
+        if(camera != null && intervalShutter == 'soft') {
             camera.takePicture({download: true}, function (er, data) {
                 var imageFile = 'camera_' + index;
                 var imagePath = __dirname + '/tmp/' + imageFile + '.jpg';
@@ -154,15 +155,16 @@ module.exports = function(cam) {
         }
     }
     
-    this.intervalStart = function(delay, interval, shots, index) {
+    this.intervalStart = function(settings, index) {
         if(intervalStarted)
             return false;
         
         setCamera();
         
-        intervalDelay = parseInt(delay);
-        intervalInterval = interval;
-        intervalShots = parseInt(shots);
+        intervalDelay = parseInt(settings.delay);
+        intervalInterval = settings.interval;
+        intervalShots = parseInt(settings.shots);
+        intervalShutter = settings.shutter;
         intervalStarted = true;
         intervalPaused = false;
         intervalIndex = 0;
