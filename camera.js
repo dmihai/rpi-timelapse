@@ -38,10 +38,10 @@ module.exports = function(cam) {
     }
     
     var setCamera = function() {
-        var i;
-        var params = getConfigParams();
-        
         if(camera != null) {
+            var i;
+            var params = getConfigParams();
+            
             camera.getConfig(function (er, settings) {
                 for(i = 0; i < params.length; i++) {
                     cameraParams[params[i].param] = settings.main.children[params[i].category].children[params[i].param].value;
@@ -54,10 +54,10 @@ module.exports = function(cam) {
     }
     
     var resetCamera = function() {
-        var i;
-        var params = getConfigParams();
-        
         if(camera != null) {
+            var i;
+            var params = getConfigParams();
+            
             for(i = 0; i < params.length; i++) {
                 camera.setConfigValue(params[i].param, cameraParams[params[i].param], function (err) {
                     if(err) throw err;
