@@ -4,6 +4,9 @@
     "intervalDelay": 5,
     "intervalInterval": 10,
     "intervalShots": 250,
+    "shutterFocusPin": 7,
+    "shutterReleasePin": 11,
+    "shutterPressedTime": 200,
     "cameraSettings": [
         {
             "model": "nikon.*(d7000|d5100)",

@@ -1,7 +1,9 @@
 var express = require('express');
 var gphoto2 = require('gphoto2');
 var bodyParser = require('body-parser');
+var gpio = require('rpi-gpio');
 
+var config = require('./config');
 var Camera = require('./camera');
 var interval = require('./routes/interval');
 var settings = require('./routes/settings');
@@ -76,6 +78,14 @@ global.refreshCameras = function() {
         camArr = newCamArr;
     });
 }
+
+gpio.setup(config.shutterFocusPin, gpio.DIR_OUT, function(err) {
+    if(err) throw err;
+});
+
+gpio.setup(config.shutterReleasePin, gpio.DIR_OUT, function(err) {
+    if(err) throw err;
+});
 
 // start server
 var server = app.listen(80);

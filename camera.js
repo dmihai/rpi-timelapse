@@ -1,4 +1,5 @@
 var fs = require('fs');
+var gpio = require('rpi-gpio');
 var exec = require('child_process').exec;
 var config = require('./config');
 
@@ -64,6 +65,25 @@ module.exports = function(cam) {
         }
     }
     
+    var enableShutter = function() {
+        gpio.write(config.shutterFocusPin, true, function(err) {
+            if (err) throw err;
+            gpio.write(config.shutterReleasePin, true, function(err) {
+                if (err) throw err;
+                setTimeout(disableShutter, config.shutterPressedTime);
+            });
+        });
+    }
+    
+    var disableShutter = function() {
+        gpio.write(config.shutterReleasePin, false, function(err) {
+            if (err) throw err;
+            gpio.write(config.shutterFocusPin, false, function(err) {
+                if (err) throw err;
+            });
+        });
+    }
+    
     var takePicture = function(index) {
         if(camera != null) {
             camera.takePicture({download: true}, function (er, data) {
@@ -77,10 +97,9 @@ module.exports = function(cam) {
                     exec(histogramCmd, function(error, stdout, stderr) {});
                 });
             });
-
-            console.log(camera.model + ": take picture");
         }
         else {
+            enableShutter();
         }
     }
     
