@@ -14,6 +14,7 @@ module.exports = function(cam) {
     var intervalShutter = 'soft';
     var intervalIndex = 0;
     var intervalTimer = null;
+    var intervalTimeout = null;
     
     var camera = cam;
     var settingsAperture = null;
@@ -115,6 +116,13 @@ module.exports = function(cam) {
         }
     }
     
+    var intervalClearInterval = function() {
+        if(intervalTimer)
+            clearInterval(intervalTimer);
+        if(intervalTimeout)
+            clearTimeout(intervalTimeout);
+    }
+    
     this.getCameraSettings = function() {
         if(camera != null) {
             camera.getConfig(function (er, settings) {
@@ -169,10 +177,9 @@ module.exports = function(cam) {
         intervalPaused = false;
         intervalIndex = 0;
         
-        if(intervalTimer)
-            clearInterval(intervalTimer);
+        intervalClearInterval();
         
-        setTimeout(function() {
+        intervalTimeout = setTimeout(function() {
             intervalTakePicture(index);
             intervalTimer = setInterval(function() {
                 intervalTakePicture(index);
@@ -191,7 +198,7 @@ module.exports = function(cam) {
         intervalStarted = false;
         intervalPaused = false;
         intervalIndex = 0;
-        clearInterval(intervalTimer);
+        intervalClearInterval();
         
         return true;
     }
