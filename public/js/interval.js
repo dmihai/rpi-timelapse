@@ -33,7 +33,8 @@ function startInterval() {
             camera: cameraIndex,
             delay: $("#delay").val(),
             interval: $("#interval").val(),
-            shots: $("#count").val()
+            shots: $("#count").val(),
+            shutter: $("#shutter").val()
         })
         .done(function(data) {
             if(data == 'OK') {
@@ -85,4 +86,10 @@ function stopInterval() {
             }
         });
     }
+}
+
+function shutterChanged(value) {
+    $("#shutter").val(value);
+    $("#option_" + (value=="soft"?"hard":"soft")).removeClass("active");
+    $("#option_" + value).addClass("active");
 }

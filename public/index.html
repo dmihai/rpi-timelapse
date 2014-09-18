@@ -63,7 +63,9 @@
         <div class="form-group">
           <label for="shutter" class="col-xs-2 control-label">Shutter</label>
           <div class="col-xs-3">
-            <input type="hidden" name="shutter" value="soft" />
+            <input type="hidden" id="shutter" value="soft" />
+            <input id="option_soft" class="btn btn-success active" type="button" value="Soft" onclick="shutterChanged('soft')" />
+            <input id="option_hard" class="btn btn-success" type="button" value="Hard" onclick="shutterChanged('hard')" />
           </div>
         </div>
         <div class="form-group">
