@@ -20,6 +20,9 @@ module.exports = function(cam) {
     var settingsAperture = null;
     var settingsSpeed = null;
     var settingsIso = null;
+    var settingsApertureArr = [];
+    var settingsSpeedArr = [];
+    var settingsIsoArr = [];
     
     var cameraParams = {};
 
@@ -129,13 +132,15 @@ module.exports = function(cam) {
                 settingsAperture = settings.main.children['capturesettings'].children['f-number'].value;
                 settingsSpeed = settings.main.children['capturesettings'].children['shutterspeed2'].value;
                 settingsIso = settings.main.children['imgsettings'].children['iso'].value;
+                
+                settingsApertureArr = settings.main.children['capturesettings'].children['f-number'].choices;
+                settingsSpeedArr = settings.main.children['capturesettings'].children['shutterspeed2'].choices;
+                settingsIsoArr = settings.main.children['imgsettings'].children['iso'].choices;
+                
                 intervalShutter = "soft";
                 
                 console.log("camera: " + camera.model);
                 console.log("port: " + camera.port);
-                console.log("aperture: " + settingsAperture);
-                console.log("speed: " + settingsSpeed);
-                console.log("iso: " + settingsIso);
             });
         }
         else {
@@ -235,6 +240,18 @@ module.exports = function(cam) {
 
     this.getSettingsIso = function() {
         return settingsIso;
+    }
+    
+    this.getSettingsApertureArr = function() {
+        return settingsApertureArr;
+    }
+    
+    this.getSettingsSpeedArr = function() {
+        return settingsSpeedArr;
+    }
+
+    this.getSettingsIsoArr = function() {
+        return settingsIsoArr;
     }
     
     this.getCamera = function() {

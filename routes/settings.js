@@ -20,7 +20,10 @@ exports.refresh = function(req, res) {
         res.status(200).send({
             aperture: camera.getSettingsAperture(),
             speed: camera.getSettingsSpeed(),
-            iso: camera.getSettingsIso()
+            iso: camera.getSettingsIso(),
+            apertureArr: camera.getSettingsApertureArr(),
+            speedArr: camera.getSettingsSpeedArr(),
+            isoArr: camera.getSettingsIsoArr()
         });
     }
     else {

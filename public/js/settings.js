@@ -6,6 +6,9 @@ function getSettings() {
 		$("#aperture").val(data.aperture);
 		$("#shutter").val(data.speed);
 		$("#iso").val(data.iso);
+        apertureArr = data.apertureArr;
+        speedArr = data.speedArr;
+        isoArr = data.isoArr;
 	});
 }
 

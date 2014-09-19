@@ -58,6 +58,7 @@ global.refreshCameras = function() {
             for(j = 0; j < camArr.length; j++) {
                 if(camArr[j].getCamera() && list[i].camera == camArr[j].getCamera().camera && list[i].port == camArr[j].getCamera().port) {
                     found = true;
+                    camArr[j].getCameraSettings();
                     newCamArr[newCamArr.length] = camArr[j];
                 }
             }
