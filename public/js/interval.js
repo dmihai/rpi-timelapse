@@ -17,7 +17,7 @@ function getInterval() {
         intervalPaused = data.paused;
         shutterChanged(data.shutter);
         if(!data.hasSoft)
-            $("#option_hard").attr("disabled", "disabled");
+            $("#option_soft").attr("disabled", "disabled");
         
         showIntervalButtons();
         updateTime();
