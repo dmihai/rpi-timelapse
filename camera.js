@@ -129,6 +129,7 @@ module.exports = function(cam) {
                 settingsAperture = settings.main.children['capturesettings'].children['f-number'].value;
                 settingsSpeed = settings.main.children['capturesettings'].children['shutterspeed2'].value;
                 settingsIso = settings.main.children['imgsettings'].children['iso'].value;
+                intervalShutter = "soft";
                 
                 console.log("camera: " + camera.model);
                 console.log("port: " + camera.port);
@@ -136,6 +137,9 @@ module.exports = function(cam) {
                 console.log("speed: " + settingsSpeed);
                 console.log("iso: " + settingsIso);
             });
+        }
+        else {
+            intervalShutter = "hard";
         }
     }
     
@@ -259,5 +263,9 @@ module.exports = function(cam) {
 
     this.getIntervalIndex = function() {
         return intervalIndex;
+    }
+    
+    this.getIntervalShutter = function() {
+        return intervalShutter;
     }
 }

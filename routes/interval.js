@@ -76,7 +76,9 @@ exports.refresh = function(req, res) {
             delay: camera.getIntervalDelay(),
             interval: camera.getIntervalInterval(),
             shots: camera.getIntervalShots(),
-            index: camera.getIntervalIndex()
+            index: camera.getIntervalIndex(),
+            shutter: camera.getIntervalShutter(),
+            hasSoft: camera.getCamera() ? true : false
         });
     }
     else {

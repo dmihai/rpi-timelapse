@@ -15,6 +15,10 @@ function getInterval() {
         intervalIndex = data.index;
         intervalStarted = data.started;
         intervalPaused = data.paused;
+        shutterChanged(data.shutter);
+        if(!data.hasSoft)
+            $("#option_hard").attr("disabled", "disabled");
+        
         showIntervalButtons();
         updateTime();
 	});
