@@ -73,6 +73,7 @@ global.refreshCameras = function() {
         // if no camera found, add a generic camera
         if(newCamArr.length == 0) {
             camera = new Camera(null);
+            camera.getCameraSettings();
             newCamArr[newCamArr.length] = camera;
         }
         
