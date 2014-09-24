@@ -12,6 +12,7 @@ module.exports = function(cam) {
     var intervalInterval = config.intervalInterval;
     var intervalShots = config.intervalShots;
     var intervalShutter = 'soft';
+    var intervalHistogram = true;
     var intervalIndex = 0;
     var intervalTimer = null;
     var intervalTimeout = null;
@@ -91,7 +92,10 @@ module.exports = function(cam) {
     
     var takePicture = function(index) {
         if(camera != null && intervalShutter == 'soft') {
-            camera.takePicture({download: true}, function (er, data) {
+            camera.takePicture({download: intervalHistogram}, function (er, data) {
+                if(!intervalHistogram)
+                    return;
+                
                 var imageFile = 'camera_' + index;
                 var imagePath = __dirname + '/tmp/' + imageFile + '.jpg';
                 var histogramPath = __dirname + '/public/histo/' + imageFile + '.png';
@@ -138,6 +142,7 @@ module.exports = function(cam) {
                 settingsIsoArr = settings.main.children['imgsettings'].children['iso'].choices;
                 
                 intervalShutter = "soft";
+                intervalHistogram = true;
                 
                 console.log("camera: " + camera.model);
                 console.log("port: " + camera.port);
@@ -145,6 +150,7 @@ module.exports = function(cam) {
         }
         else {
             intervalShutter = "hard";
+            intervalHistogram = false;
         }
     }
     
@@ -182,6 +188,7 @@ module.exports = function(cam) {
         intervalInterval = settings.interval;
         intervalShots = parseInt(settings.shots);
         intervalShutter = settings.shutter;
+        intervalHistogram = settings.histogram;
         intervalStarted = true;
         intervalPaused = false;
         intervalIndex = 0;
@@ -284,5 +291,9 @@ module.exports = function(cam) {
     
     this.getIntervalShutter = function() {
         return intervalShutter;
+    }
+    
+    this.getIntervalHistogram = function() {
+        return intervalHistogram;
     }
 }

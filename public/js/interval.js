@@ -38,7 +38,8 @@ function startInterval() {
             delay: $("#delay").val(),
             interval: $("#interval").val(),
             shots: $("#count").val(),
-            shutter: $("#shutter").val()
+            shutter: $("#shutter").val(),
+            histogram: $("#histogram").val()=='1' ? true : false
         })
         .done(function(data) {
             if(data == 'OK') {
@@ -96,4 +97,10 @@ function shutterChanged(value) {
     $("#shutter").val(value);
     $("#option_" + (value=="soft"?"hard":"soft")).removeClass("active");
     $("#option_" + value).addClass("active");
+}
+
+function histogramChanged(value) {
+    $("#histogram").val(value=='yes' ? '1' : '0');
+    $("#histogram_" + (value=="yes"?"no":"yes")).removeClass("active");
+    $("#histogram_" + value).addClass("active");
 }

@@ -6,7 +6,8 @@ exports.start = function(req, res) {
             delay: req.param('delay'),
             interval: req.param('interval'),
             shots: req.param('shots'),
-            shutter: req.param('shutter')
+            shutter: req.param('shutter'),
+            histogram: req.param('histogram')
         }, (req.param('camera') || '0'))) {
             res.status(200).send('OK');
         }
@@ -78,6 +79,7 @@ exports.refresh = function(req, res) {
             shots: camera.getIntervalShots(),
             index: camera.getIntervalIndex(),
             shutter: camera.getIntervalShutter(),
+            histogram: camera.getIntervalHistogram() ? '1' : '0',
             hasSoft: camera.getCamera() ? true : false
         });
     }
