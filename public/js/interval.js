@@ -17,8 +17,8 @@ function getInterval() {
         intervalPaused = data.paused;
         shutterChanged(data.shutter);
         if(!data.hasSoft) {
-            $("#shutter_soft").attr("disabled", "disabled");
-            $("#histogram_1").attr("disabled", "disabled");
+            $("#shutter_control").hide();
+            $("#histogram_control").hide();
         }
         
         showIntervalButtons();
