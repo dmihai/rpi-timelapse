@@ -7,6 +7,9 @@
     "shutterFocusPin": 7,
     "shutterReleasePin": 11,
     "shutterPressedTime": 200,
+    "sliderPinLeft": 15,
+    "sliderPinRight": 16,
+    "sliderLimitPin": 18,
     "cameraSettings": [
         {
             "model": "nikon.*(d7000|d5100)",

@@ -86,7 +86,7 @@ exports.refresh = function(req, res) {
             hasSoft: camera.getCamera() ? true : false,
             slider: camera.getIntervalSlider() ? '1' : '0',
             mdirection: camera.getIntervalMDirection(),
-            mtime: getIntervalMTime()
+            mtime: camera.getIntervalMTime()
         });
     }
     else {

@@ -89,6 +89,14 @@ gpio.setup(config.shutterReleasePin, gpio.DIR_OUT, function(err) {
     if(err) throw err;
 });
 
+gpio.setup(config.sliderPinLeft, gpio.DIR_OUT, function(err) {
+    if(err) throw err;
+});
+
+gpio.setup(config.sliderPinRight, gpio.DIR_OUT, function(err) {
+    if(err) throw err;
+});
+
 // start server
 var server = app.listen(80);
 

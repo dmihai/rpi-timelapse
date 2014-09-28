@@ -93,6 +93,28 @@ module.exports = function(cam) {
         });
     }
     
+    var sliderMove = function() {
+        if(intervalStarted && !intervalPaused) {
+            var sliderPin = (intervalMDirection=='left' ? config.sliderPinLeft : config.sliderPinRight);
+            gpio.write(sliderPin, true, function(err) {
+                if (err) throw err;
+                setTimeout(function() {
+                    sliderStop();
+                }, parseInt(intervalMTime));
+            });
+        }
+    }
+    
+    var sliderStop = function() {
+        gpio.write(config.sliderPinLeft, false, function(err) {
+            if (err) throw err;
+        });
+        
+        gpio.write(config.sliderPinRight, false, function(err) {
+            if (err) throw err;
+        });
+    }
+    
     var takePicture = function(index) {
         if(camera != null && intervalShutter == 'soft') {
             camera.takePicture({download: intervalHistogram}, function (er, data) {
@@ -122,6 +144,13 @@ module.exports = function(cam) {
             
             if(intervalIndex >= intervalShots) {
                 _this.intervalStop();
+            }
+            
+            if(intervalSlider) {
+                var sliderDelay = camera ? (eval(settingsSpeed) * 1000) + 500 : 1000;
+                setTimeout(function() {
+                    sliderMove();
+                }, sliderDelay);
             }
         }
     }
