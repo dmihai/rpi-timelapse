@@ -7,7 +7,10 @@ exports.start = function(req, res) {
             interval: req.param('interval'),
             shots: req.param('shots'),
             shutter: req.param('shutter'),
-            histogram: req.param('histogram')
+            histogram: req.param('histogram'),
+            slider: req.param('slider'),
+            mdirection: req.param('mdirection'),
+            mtime: req.param('mtime')
         }, (req.param('camera') || '0'))) {
             res.status(200).send('OK');
         }
@@ -80,7 +83,10 @@ exports.refresh = function(req, res) {
             index: camera.getIntervalIndex(),
             shutter: camera.getIntervalShutter(),
             histogram: camera.getIntervalHistogram() ? '1' : '0',
-            hasSoft: camera.getCamera() ? true : false
+            hasSoft: camera.getCamera() ? true : false,
+            slider: camera.getIntervalSlider() ? '1' : '0',
+            mdirection: camera.getIntervalMDirection(),
+            mtime: getIntervalMTime()
         });
     }
     else {

@@ -13,6 +13,9 @@ module.exports = function(cam) {
     var intervalShots = config.intervalShots;
     var intervalShutter = 'soft';
     var intervalHistogram = true;
+    var intervalSlider = false;
+    var intervalMDirection = 'left';
+    var intervalMTime = '500';
     var intervalIndex = 0;
     var intervalTimer = null;
     var intervalTimeout = null;
@@ -152,6 +155,10 @@ module.exports = function(cam) {
             intervalShutter = "hard";
             intervalHistogram = false;
         }
+        
+        intervalSlider = false;
+        intervalMDirection = 'left';
+        intervalMTime = '500';
     }
     
     this.changeAperture = function(newAperture) {
@@ -189,6 +196,9 @@ module.exports = function(cam) {
         intervalShots = parseInt(settings.shots);
         intervalShutter = settings.shutter;
         intervalHistogram = settings.histogram;
+        intervalSlider = settings.slider;
+        intervalMDirection = settings.mdirection;
+        intervalMTime = settings.mtime;
         intervalStarted = true;
         intervalPaused = false;
         intervalIndex = 0;
@@ -295,5 +305,17 @@ module.exports = function(cam) {
     
     this.getIntervalHistogram = function() {
         return intervalHistogram;
+    }
+    
+    this.getIntervalSlider = function() {
+        return intervalSlider;
+    }
+    
+    this.getIntervalMDirection = function() {
+        return intervalMDirection;
+    }
+    
+    this.getIntervalMTime = function() {
+        return intervalMTime;
     }
 }

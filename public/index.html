@@ -76,6 +76,32 @@
             <input id="histogram_0" class="btn btn-success" type="button" value="No" onclick="optionChanged('histogram', '0')" />
           </div>
         </div>
+        <div id="slider_control" class="form-group">
+          <label for="slider" class="col-xs-2 control-label">Slider</label>
+          <div class="col-xs-3">
+            <input type="hidden" id="slider" value="0" />
+            <input id="slider_1" class="btn btn-success" type="button" value="Yes" onclick="optionChanged('slider', '1'); sliderChanged('1');" />
+            <input id="slider_0" class="btn btn-success active" type="button" value="No" onclick="optionChanged('slider', '0'); sliderChanged('0');" />
+          </div>
+        </div>
+        <div id="mdirection_control" class="form-group">
+          <label for="mdirection" class="col-xs-2 control-label">Direction</label>
+          <div class="col-xs-3">
+            <input type="hidden" id="mdirection" value="left" />
+            <input id="mdirection_left" class="btn btn-success active" type="button" value="Left" onclick="optionChanged('mdirection', 'left')" />
+            <input id="mdirection_right" class="btn btn-success" type="button" value="Right" onclick="optionChanged('mdirection', 'right')" />
+          </div>
+        </div>
+        <div id="mtime_control" class="form-group">
+          <label for="mtime" class="col-xs-2 control-label">Speed</label>
+          <div class="col-xs-2">
+            <input id="mtime" class="form-control" type="text" value="500">
+          </div>
+          <div class="col-xs-2">
+            <input class="btn btn-default" type="button" value="+" onclick="updateValue('mtime', 20)">
+            <input class="btn btn-default" type="button" value="-" onclick="updateValue('mtime', -20)">
+          </div>
+        </div>
         <div class="form-group">
           <div class="col-xs-4 col-xs-offset-2">
             <button id="startBtn" type="button" class="btn btn-default" onclick="startInterval()" style="display: none;">Start</button>

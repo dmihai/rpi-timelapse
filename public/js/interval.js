@@ -17,7 +17,11 @@ function getInterval() {
         intervalPaused = data.paused;
         
         optionChanged('shutter', data.shutter);
-        optionChanged('histogram', data.histogram ? '1' : '0');
+        optionChanged('histogram', data.histogram);
+        optionChanged('slider', data.slider);
+        sliderChanged(data.slider);
+        optionChanged('mdirection', data.mdirection);
+        $("#mtime").val(data.mtime);
         
         if(!data.hasSoft) {
             $("#shutter_control").hide();
@@ -44,7 +48,10 @@ function startInterval() {
             interval: $("#interval").val(),
             shots: $("#count").val(),
             shutter: $("#shutter").val(),
-            histogram: $("#histogram").val()=='1' ? true : false
+            histogram: $("#histogram").val()=='1' ? true : false,
+            slider: $("#slider").val()=='1' ? true : false,
+            mdirection: $("#mdirection").val(),
+            mtime: $("#mtime").val()
         })
         .done(function(data) {
             if(data == 'OK') {
@@ -102,4 +109,15 @@ function optionChanged(option, value) {
     $("#" + option).val(value);
     $("input[id^='" + option + "_'].active").removeClass("active");
     $("#" + option + "_" + value).addClass("active");
+}
+
+function sliderChanged(value) {
+    if(value == '1') {
+        $("#mdirection_control").show();
+        $("#mtime_control").show();
+    }
+    else {
+        $("#mdirection_control").hide();
+        $("#mtime_control").hide();
+    }
 }
