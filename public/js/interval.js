@@ -15,7 +15,10 @@ function getInterval() {
         intervalIndex = data.index;
         intervalStarted = data.started;
         intervalPaused = data.paused;
-        shutterChanged(data.shutter);
+        
+        optionChanged('shutter', data.shutter);
+        optionChanged('histogram', data.histogram ? '1' : '0');
+        
         if(!data.hasSoft) {
             $("#shutter_control").hide();
             $("#histogram_control").hide();
