@@ -64,16 +64,16 @@
           <label for="shutter" class="col-xs-2 control-label">Shutter</label>
           <div class="col-xs-3">
             <input type="hidden" id="shutter" value="soft" />
-            <input id="option_soft" class="btn btn-success active" type="button" value="Soft" onclick="shutterChanged('soft')" />
-            <input id="option_hard" class="btn btn-success" type="button" value="Hard" onclick="shutterChanged('hard')" />
+            <input id="shutter_soft" class="btn btn-success active" type="button" value="Soft" onclick="optionChanged('shutter', 'soft')" />
+            <input id="shutter_hard" class="btn btn-success" type="button" value="Hard" onclick="optionChanged('shutter', 'hard')" />
           </div>
         </div>
         <div class="form-group">
           <label for="histogram" class="col-xs-2 control-label">Histogram</label>
           <div class="col-xs-3">
             <input type="hidden" id="histogram" value="1" />
-            <input id="histogram_yes" class="btn btn-success active" type="button" value="Yes" onclick="histogramChanged('yes')" />
-            <input id="histogram_no" class="btn btn-success" type="button" value="No" onclick="histogramChanged('no')" />
+            <input id="histogram_1" class="btn btn-success active" type="button" value="Yes" onclick="optionChanged('histogram', '1')" />
+            <input id="histogram_0" class="btn btn-success" type="button" value="No" onclick="optionChanged('histogram', '0')" />
           </div>
         </div>
         <div class="form-group">

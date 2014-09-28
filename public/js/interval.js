@@ -16,8 +16,10 @@ function getInterval() {
         intervalStarted = data.started;
         intervalPaused = data.paused;
         shutterChanged(data.shutter);
-        if(!data.hasSoft)
-            $("#option_soft").attr("disabled", "disabled");
+        if(!data.hasSoft) {
+            $("#shutter_soft").attr("disabled", "disabled");
+            $("#histogram_1").attr("disabled", "disabled");
+        }
         
         showIntervalButtons();
         updateTime();
@@ -93,14 +95,8 @@ function stopInterval() {
     }
 }
 
-function shutterChanged(value) {
-    $("#shutter").val(value);
-    $("#option_" + (value=="soft"?"hard":"soft")).removeClass("active");
-    $("#option_" + value).addClass("active");
-}
-
-function histogramChanged(value) {
-    $("#histogram").val(value=='yes' ? '1' : '0');
-    $("#histogram_" + (value=="yes"?"no":"yes")).removeClass("active");
-    $("#histogram_" + value).addClass("active");
+function optionChanged(option, value) {
+    $("#" + option).val(value);
+    $("input[id^='" + option + "_'].active").removeClass("active");
+    $("#" + option + "_" + value).addClass("active");
 }
