@@ -23,8 +23,19 @@ exports.refresh = function(req, res) {
             iso: camera.getSettingsIso(),
             apertureArr: camera.getSettingsApertureArr(),
             speedArr: camera.getSettingsSpeedArr(),
-            isoArr: camera.getSettingsIsoArr()
+            isoArr: camera.getSettingsIsoArr(),
+            interval: camera.isIntervalStarted()
         });
+    }
+    else {
+        res.status(500).send('No camera');
+    }
+}
+
+exports.shoot = function(req, res) {
+    var camera = getRequestCamera(req);
+    if(camera) {
+        camera.testShoot(req.param('camera'));
     }
     else {
         res.status(500).send('No camera');

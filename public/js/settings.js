@@ -9,6 +9,11 @@ function getSettings() {
         apertureArr = data.apertureArr;
         speedArr = data.speedArr;
         isoArr = data.isoArr;
+        
+        if(data.interval)
+            $("#shootBtn").hide();
+        else
+            $("#shootBtn").show();
 	});
 }
 
@@ -28,4 +33,14 @@ function updateSettings() {
 function updateHistogram() {
     date = new Date();
     $("#histogram").attr("src", "/histo/camera_" + cameraIndex + ".png?" + date.getTime());
+}
+
+function testShoot() {
+	$.post("/api/settings/shoot", {
+        camera: cameraIndex,
+	})
+	.done(function(data) {
+		if(data != 'OK')
+			getSettings();
+	});
 }

@@ -31,6 +31,7 @@ app.get('/api/interval/refresh', interval.refresh);
 
 app.post('/api/settings/set', settings.set);
 app.get('/api/settings/refresh', settings.refresh);
+app.post('/api/settings/shoot', settings.shoot);
 
 app.get('/api/status/refresh', status.refresh);
 app.get('/api/status/cameras', status.cameras);

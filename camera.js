@@ -115,10 +115,10 @@ module.exports = function(cam) {
         });
     }
     
-    var takePicture = function(index) {
-        if(camera != null && intervalShutter == 'soft') {
-            camera.takePicture({download: intervalHistogram}, function (er, data) {
-                if(!intervalHistogram)
+    var takePicture = function(index, test) {
+        if(camera != null && (intervalShutter == 'soft' || test)) {
+            camera.takePicture({download: intervalHistogram || test}, function (er, data) {
+                if(!intervalHistogram && !test)
                     return;
                 
                 var imageFile = 'camera_' + index;
@@ -140,7 +140,7 @@ module.exports = function(cam) {
     var intervalTakePicture = function(index) {
         if(intervalStarted && !intervalPaused) {
             intervalIndex++;
-            takePicture(index);
+            takePicture(index, false);
             
             if(intervalIndex >= intervalShots) {
                 _this.intervalStop();
@@ -212,6 +212,18 @@ module.exports = function(cam) {
                 if(!err) settingsIso = newIso;
             });
         }
+    }
+    
+    this.testShoot = function(index) {
+        setCamera();
+        
+        setTimeout(function() {
+            takePicture(index, true);
+        
+            setTimeout(function() {
+                resetCamera();
+            }, 1000);
+        }, 1000);
     }
     
     this.intervalStart = function(settings, index) {
