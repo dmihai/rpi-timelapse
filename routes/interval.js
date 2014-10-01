@@ -7,8 +7,8 @@ exports.start = function(req, res) {
             interval: req.param('interval'),
             shots: req.param('shots'),
             shutter: req.param('shutter'),
-            histogram: req.param('histogram'),
-            slider: req.param('slider'),
+            histogram: req.param('histogram')=='1',
+            slider: req.param('slider')=='1',
             mdirection: req.param('mdirection'),
             mtime: req.param('mtime')
         }, (req.param('camera') || '0'))) {

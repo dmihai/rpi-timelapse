@@ -48,8 +48,8 @@ function startInterval() {
             interval: $("#interval").val(),
             shots: $("#count").val(),
             shutter: $("#shutter").val(),
-            histogram: $("#histogram").val()=='1' ? true : false,
-            slider: $("#slider").val()=='1' ? true : false,
+            histogram: $("#histogram").val(),
+            slider: $("#slider").val(),
             mdirection: $("#mdirection").val(),
             mtime: $("#mtime").val()
         })
