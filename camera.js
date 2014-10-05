@@ -19,6 +19,7 @@ module.exports = function(cam) {
     var intervalIndex = 0;
     var intervalTimer = null;
     var intervalTimeout = null;
+    var intervalSliderCheck = null;
     
     var camera = cam;
     var settingsAperture = null;
@@ -101,6 +102,15 @@ module.exports = function(cam) {
                 setTimeout(function() {
                     sliderStop();
                 }, parseInt(intervalMTime));
+                
+                intervalSliderCheck = setInterval(function() {
+                    gpio.read(config.sliderLimitPin, function(err, value) {
+                        if(!value) {
+                            sliderStop();
+                            _this.intervalStop();
+                        }
+                    });
+                }, 100);
             });
         }
     }
@@ -113,6 +123,8 @@ module.exports = function(cam) {
         gpio.write(config.sliderPinRight, false, function(err) {
             if (err) throw err;
         });
+        
+        clearInterval(intervalSliderCheck);
     }
     
     var takePicture = function(index, test) {
@@ -160,6 +172,8 @@ module.exports = function(cam) {
             clearInterval(intervalTimer);
         if(intervalTimeout)
             clearTimeout(intervalTimeout);
+        if(intervalSliderCheck)
+            clearInterval(intervalSliderCheck);
     }
     
     this.getCameraSettings = function() {

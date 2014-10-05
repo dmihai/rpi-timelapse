@@ -98,6 +98,10 @@ gpio.setup(config.sliderPinRight, gpio.DIR_OUT, function(err) {
     if(err) throw err;
 });
 
+gpio.setup(config.sliderLimitPin, gpio.DIR_IN, function(err) {
+    if(err) throw err;
+});
+
 // start server
 var server = app.listen(80);
 
