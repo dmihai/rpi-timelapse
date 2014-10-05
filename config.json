@@ -7,8 +7,8 @@
     "shutterFocusPin": 7,
     "shutterReleasePin": 11,
     "shutterPressedTime": 200,
-    "sliderPinLeft": 15,
-    "sliderPinRight": 16,
+    "sliderPinLeft": 16,
+    "sliderPinRight": 15,
     "sliderLimitPin": 18,
     "cameraSettings": [
         {
