@@ -15,7 +15,7 @@ module.exports = function(cam) {
     var intervalHistogram = true;
     var intervalSlider = false;
     var intervalMDirection = 'left';
-    var intervalMTime = '500';
+    var intervalMTime = '300';
     var intervalIndex = 0;
     var intervalTimer = null;
     var intervalTimeout = null;
@@ -129,6 +129,7 @@ module.exports = function(cam) {
     
     var takePicture = function(index, test) {
         if(camera != null && (intervalShutter == 'soft' || test)) {
+            console.log("take picture");
             camera.takePicture({download: intervalHistogram || test}, function (er, data) {
                 if(!intervalHistogram && !test)
                     return;
@@ -137,9 +138,11 @@ module.exports = function(cam) {
                 var imagePath = __dirname + '/tmp/' + imageFile + '.jpg';
                 var histogramPath = __dirname + '/public/histo/' + imageFile + '.png';
                 
+                console.log("download picture");
                 fs.writeFile(imagePath, data, function(err) {
                     if(err) throw err;
                     var histogramCmd = config.convertPath + " " + imagePath + " -define histogram:unique-colors=false histogram:" + histogramPath;
+                    console.log("build histogram");
                     exec(histogramCmd, function(error, stdout, stderr) {});
                 });
             });
@@ -160,6 +163,7 @@ module.exports = function(cam) {
             
             if(intervalSlider) {
                 var sliderDelay = camera ? (eval(settingsSpeed) * 1000) + 500 : 1000;
+
                 setTimeout(function() {
                     sliderMove();
                 }, sliderDelay);
@@ -201,7 +205,7 @@ module.exports = function(cam) {
         
         intervalSlider = false;
         intervalMDirection = 'left';
-        intervalMTime = '500';
+        intervalMTime = '300';
     }
     
     this.changeAperture = function(newAperture) {
@@ -274,7 +278,9 @@ module.exports = function(cam) {
         if(!intervalStarted)
             return false;
         
-        resetCamera();
+        setTimeout(function() {
+            resetCamera();
+        }, 1000);
         
         intervalStarted = false;
         intervalPaused = false;
