@@ -15,7 +15,7 @@ module.exports = function(cam) {
     var intervalHistogram = true;
     var intervalSlider = false;
     var intervalMDirection = 'left';
-    var intervalMTime = '300';
+    var intervalMTime = '250';
     var intervalIndex = 0;
     var intervalTimer = null;
     var intervalTimeout = null;
@@ -205,7 +205,7 @@ module.exports = function(cam) {
         
         intervalSlider = false;
         intervalMDirection = 'left';
-        intervalMTime = '300';
+        intervalMTime = '250';
     }
     
     this.changeAperture = function(newAperture) {
