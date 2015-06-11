@@ -162,7 +162,7 @@ module.exports = function(cam) {
             }
             
             if(intervalSlider) {
-                var sliderDelay = camera ? (eval(settingsSpeed) * 1000) + 500 : 1000;
+                var sliderDelay = camera != null ? (eval(settingsSpeed) * 1000) + 500 : 1000;
 
                 setTimeout(function() {
                     sliderMove();
