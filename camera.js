@@ -16,6 +16,7 @@ module.exports = function(cam) {
     var intervalSlider = false;
     var intervalMDirection = 'left';
     var intervalMTime = '250';
+    var intervalMTimeout = null;
     var intervalIndex = 0;
     var intervalTimer = null;
     var intervalTimeout = null;
@@ -94,15 +95,20 @@ module.exports = function(cam) {
         });
     }
     
-    var sliderMove = function() {
-        if(intervalStarted && !intervalPaused) {
-            var sliderPin = (intervalMDirection=='left' ? config.sliderPinLeft : config.sliderPinRight);
-            gpio.write(sliderPin, true, function(err) {
-                if (err) throw err;
-                setTimeout(function() {
-                    sliderStop();
-                }, parseInt(intervalMTime));
-                
+    var motorMove = function(direction, duration) {
+        var sliderPin = (direction=='left' ? config.sliderPinLeft : config.sliderPinRight);
+        
+        if(intervalMTimeout)
+            clearTimeout(intervalMTimeout);
+        
+        gpio.write(sliderPin, true, function(err) {
+            if (err) throw err;
+            
+            intervalMTimeout = setTimeout(function() {
+                sliderStop();
+            }, parseInt(duration));
+            
+            if(intervalSliderCheck == null) {
                 intervalSliderCheck = setInterval(function() {
                     gpio.read(config.sliderLimitPin, function(err, value) {
                         if(!value) {
@@ -111,7 +117,13 @@ module.exports = function(cam) {
                         }
                     });
                 }, 100);
-            });
+            }
+        });
+    }
+    
+    var sliderMove = function() {
+        if(intervalStarted && !intervalPaused) {
+            motorMove(intervalMDirection, intervalMTime);
         }
     }
     
@@ -178,6 +190,7 @@ module.exports = function(cam) {
             clearTimeout(intervalTimeout);
         if(intervalSliderCheck)
             clearInterval(intervalSliderCheck);
+        intervalSliderCheck = null;
     }
     
     this.getCameraSettings = function() {
@@ -378,5 +391,9 @@ module.exports = function(cam) {
     
     this.getIntervalMTime = function() {
         return intervalMTime;
+    }
+    
+    this.motorMove = function(direction) {
+        motorMove(direction, 200);
     }
 }

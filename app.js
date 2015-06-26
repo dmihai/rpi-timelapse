@@ -37,6 +37,7 @@ app.get('/api/status/refresh', status.refresh);
 app.get('/api/status/cameras', status.cameras);
 app.get('/api/status/addCamera', status.addCamera);
 app.post('/api/status/shutdown', status.shutdown);
+app.post('/api/status/motor', status.motor);
 
 app.post('/api/test/shoot', test.shoot);
 

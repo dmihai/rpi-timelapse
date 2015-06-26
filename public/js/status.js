@@ -27,3 +27,16 @@ function shutdown() {
         });
     }
 }
+
+function startMotor(direction) {
+    motorTimer = setInterval(function() {
+        $.post("/api/status/motor", {
+            dir: direction=='motor_left' ? 1 : 2
+        });
+    }, 100);
+}
+
+function stopMotor() {
+    if(motorTimer)
+        clearInterval(motorTimer);
+}

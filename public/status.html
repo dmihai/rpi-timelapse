@@ -44,8 +44,13 @@
         </div>
       </form>
       
-      <div class="ac">
-        <button type="button" class="btn btn-default" onclick="shutdown()">Shutdown</button>
+      <div class="ac form-group">
+        <button type="button" class="btn btn-default" id="motor_left">Motor Left</button>
+        <button type="button" class="btn btn-default" id="motor_right">Motor Right</button>
+      </div>
+      
+      <div class="ac form-group" style="margin-top: 50px;">
+        <button type="button" class="btn btn-danger" onclick="shutdown()">Shutdown</button>
       </div>
 
     </div>
@@ -57,6 +62,15 @@
 		setInterval(function() {
             getStatus();
         }, 1000);
+        
+        motorTimer = null;
+        $("#motor_left,#motor_right")
+            .on("touchstart mousedown", function() {
+                startMotor($(this).attr('id'));
+            })
+            .on("touchend mouseout mouseup", function() {
+                stopMotor();
+            })
 	});
 	</script>
 

@@ -37,3 +37,12 @@ exports.shutdown = function(req, res) {
     exec(config.shutdownCmd, function(error, stdout, stderr) {});
     res.status(200).send('OK');
 }
+
+exports.motor = function(req, res) {
+    res.status(200).send("OK");
+    
+    var camera = getRequestCamera(req);
+    if(camera && !camera.isIntervalStarted()) {
+        camera.motorMove(req.param("dir")=="1" ? "left" : "right");
+    }
+}
