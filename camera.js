@@ -137,6 +137,7 @@ module.exports = function(cam) {
         });
         
         clearInterval(intervalSliderCheck);
+        intervalSliderCheck = null;
     }
     
     var takePicture = function(index, test) {
