@@ -5,6 +5,8 @@
   "private": true,
   "dependencies": {
     "express": "4.x",
-    "gphoto2": "0.x"
+    "gphoto2": "0.x",
+    "body-parser": "1.x",
+    "rpi-gpio": "0.7.x"
   }
 }
