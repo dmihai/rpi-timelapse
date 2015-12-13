@@ -116,3 +116,7 @@ pi@raspberrypi:~ $ git clone https://github.com/dmihai/rpi-timelapse.git
 pi@raspberrypi:~ $ cd rpi-timelapse/
 
 pi@raspberrypi:~/rpi-timelapse $ npm install
+
+pi@raspberrypi:~/rpi-timelapse $ mkdir tmp
+
+pi@raspberrypi:~/rpi-timelapse $ mkdir public/histo
