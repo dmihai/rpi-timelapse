@@ -1,0 +1,118 @@
+1. General
+
+pi@raspberrypi:~ $ sudo raspi-config
+
+pi@raspberrypi:~ $ sudo apt-get update
+
+pi@raspberrypi:~ $ sudo apt-get upgrade
+
+pi@raspberrypi:~ $ sudo apt-get install vim
+
+pi@raspberrypi:~ $ sudo apt-get install git
+
+
+2. Install Wifi
+
+pi@raspberrypi:~ $ sudo apt-get install hostapd
+
+pi@raspberrypi:~ $ sudo apt-get install isc-dhcp-server
+
+pi@raspberrypi:~ $ sudo vim /etc/hostapd/hostapd.conf
+
+interface=wlan0
+ssid=Your_AP_SSID
+channel=1
+
+macaddr_acl=0
+auth_algs=1
+ignore_broadcast_ssid=0
+
+wpa=2
+wpa_passphrase=my_secret_pass
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=TKIP
+rsn_pairwise=CCMP
+
+driver=rtl871xdrv
+ieee80211n=1
+device_name=RTL8192CU
+manufacturer=Realtek
+hw_mode=g
+
+pi@raspberrypi:~ $ sudo vim /etc/default/hostapd
+
+DAEMON_CONF="/etc/hostapd/hostapd.conf"
+
+pi@raspberrypi:~ $ sudo vim /etc/dhcp/dhcpd.conf
+
+ddns-update-style none;
+default-lease-time 84600;
+max-lease-time 84600;
+subnet 192.134.3.0 netmask 255.255.255.0 {
+  range 192.134.3.2 192.134.3.9;
+  option domain-name-servers 192.168.1.1;
+  option domain-name "home";
+  option routers  192.134.3.1;
+}
+
+pi@raspberrypi:~ $ sudo vim /etc/default/isc-dhcp-server
+
+DHCPD_CONF="/etc/dhcp/dhcpd.conf"
+INTERFACES="wlan0"
+
+pi@raspberrypi:~ $ sudo vim /etc/network/interfaces
+
+auto wlan0
+allow-hotplug wlan0
+iface wlan0 inet static
+    address 192.134.3.1
+    netmask 255.255.255.0
+
+pi@raspberrypi:~ $ sudo vim /etc/sysctl.conf
+
+net.ipv4.ip_forward=1
+
+pi@raspberrypi:~ $ wget "http://raspberry-at-home.com/files/hostapd.gz"
+
+pi@raspberrypi:~ $ sudo gzip -d hostapd.gz
+
+pi@raspberrypi:~ $ sudo chmod 755 hostapd
+
+pi@raspberrypi:~ $ sudo cp hostapd /usr/sbin/
+
+pi@raspberrypi:~ $ sudo update-rc.d hostapd enable
+
+pi@raspberrypi:~ $ sudo update-rc.d isc-dhcp-server enable
+
+pi@raspberrypi:~ $ sudo shutdown -r now
+
+
+3. Install node.js
+
+pi@raspberrypi:~ $ mkdir nodetemp
+
+pi@raspberrypi:~ $ cd nodetemp
+
+pi@raspberrypi:~/nodetemp $ wget http://conoroneill.net.s3.amazonaws.com/wp-content/uploads/2015/07/node-v0.10.40-linux-arm-v7.tar.gz
+
+pi@raspberrypi:~/nodetemp $ tar -zxvf node-v0.10.40-linux-arm-v7.tar.gz
+
+pi@raspberrypi:~/nodetemp $ cd usr/local/
+
+pi@raspberrypi:~/nodetemp/usr/local $ sudo cp -R * /usr/local/
+
+pi@raspberrypi:~/nodetemp/usr/local $ cd ~
+
+pi@raspberrypi:~ $ wget https://raw.githubusercontent.com/gonzalo/gphoto2-updater/master/gphoto2-updater.sh
+
+pi@raspberrypi:~ $ chmod +x gphoto2-updater.sh
+
+pi@raspberrypi:~ $ sudo ./gphoto2-updater.sh
+
+pi@raspberrypi:~ $ sudo apt-get install imagemagick
+
+pi@raspberrypi:~ $ git clone https://github.com/dmihai/rpi-timelapse.git
+
+pi@raspberrypi:~ $ cd rpi-timelapse/
+
+pi@raspberrypi:~/rpi-timelapse $ npm install
