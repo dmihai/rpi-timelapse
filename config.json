@@ -12,13 +12,18 @@
     "sliderLimitPin": 18,
     "cameraSettings": [
         {
-            "model": "nikon.*(d7000|d5100)",
+            "model": ".*",
             "params": [
                 {
                     "category": "settings",
                     "param": "capturetarget",
                     "value": "Memory card"
-                },
+                }
+            ]
+        },
+        {
+            "model": "nikon.*(d7000|d5100)",
+            "params": [
                 {
                     "category": "imgsettings",
                     "param": "imagesize",

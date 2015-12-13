@@ -39,8 +39,7 @@ module.exports = function(cam) {
         for(i = 0; i < config.cameraSettings.length; i++) {
             pattern = new RegExp(config.cameraSettings[i].model, "i");
             if(pattern.test(camera.model)) {
-                params = config.cameraSettings[i].params;
-                break;
+                params = params.concat(config.cameraSettings[i].params);
             }
         }
         
