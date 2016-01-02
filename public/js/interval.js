@@ -16,17 +16,11 @@ function getInterval() {
         intervalStarted = data.started;
         intervalPaused = data.paused;
         
-        optionChanged('shutter', data.shutter);
         optionChanged('histogram', data.histogram);
         optionChanged('slider', data.slider);
         sliderChanged(data.slider);
         optionChanged('mdirection', data.mdirection);
         $("#mtime").val(data.mtime);
-        
-        if(!data.hasSoft) {
-            $("#shutter_control").hide();
-            $("#histogram_control").hide();
-        }
         
         showIntervalButtons();
         updateTime();
@@ -47,7 +41,6 @@ function startInterval() {
             delay: $("#delay").val(),
             interval: $("#interval").val(),
             shots: $("#count").val(),
-            shutter: $("#shutter").val(),
             histogram: $("#histogram").val(),
             slider: $("#slider").val(),
             mdirection: $("#mdirection").val(),

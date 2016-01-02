@@ -1,399 +1,138 @@
 var fs = require('fs');
-var gpio = require('rpi-gpio');
 var exec = require('child_process').exec;
 var config = require('./config');
 
-module.exports = function(cam) {
-    var _this = this;
+function Camera(camera) {
+    this.camera = camera;
+    this.interval = null;
+    this.slider = null;
+    this.name = "";
     
-    var intervalStarted = false;
-    var intervalPaused = false;
-    var intervalDelay = config.intervalDelay;
-    var intervalInterval = config.intervalInterval;
-    var intervalShots = config.intervalShots;
-    var intervalShutter = 'soft';
-    var intervalHistogram = true;
-    var intervalSlider = false;
-    var intervalMDirection = 'left';
-    var intervalMTime = '250';
-    var intervalMTimeout = null;
-    var intervalIndex = 0;
-    var intervalTimer = null;
-    var intervalTimeout = null;
-    var intervalSliderCheck = null;
+    this.aperture = null;
+    this.speed = null;
+    this.iso = null;
     
-    var camera = cam;
-    var settingsAperture = null;
-    var settingsSpeed = null;
-    var settingsIso = null;
-    var settingsApertureArr = [];
-    var settingsSpeedArr = [];
-    var settingsIsoArr = [];
+    this.apertureArr = [];
+    this.speedArr = [];
+    this.isoArr = [];
     
-    var cameraParams = {};
+    this.configParams = {};
+    this.cameraParams = {};
+    
+    this.busy = false;
+}
 
-    var getConfigParams = function() {
-        var params = [];
-        var i, pattern;
-        
-        for(i = 0; i < config.cameraSettings.length; i++) {
-            pattern = new RegExp(config.cameraSettings[i].model, "i");
-            if(pattern.test(camera.model)) {
-                params = params.concat(config.cameraSettings[i].params);
-            }
-        }
-        
-        return params;
-    }
-    
-    var setCamera = function() {
-        if(camera != null) {
-            var i;
-            var params = getConfigParams();
-            
-            camera.getConfig(function (er, settings) {
-                for(i = 0; i < params.length; i++) {
-                    cameraParams[params[i].param] = settings.main.children[params[i].category].children[params[i].param].value;
-                    camera.setConfigValue(params[i].param, params[i].value, function (err) {
+Camera.prototype = {
+    setParams: function() {
+        if(this.camera != null) {
+            var cameraObj = this;
+            this.busy = false;
+            this.camera.getConfig(function (er, settings) {
+                for(var i = 0; i < cameraObj.configParams.length; i++) {
+                    cameraObj.cameraParams[cameraObj.configParams[i].param] = settings.main.children[cameraObj.configParams[i].category].children[cameraObj.configParams[i].param].value;
+                    cameraObj.camera.setConfigValue(cameraObj.configParams[i].param, cameraObj.configParams[i].value, function (err) {
                         if(err) throw err;
                     });
                 }
             });
         }
-    }
-    
-    var resetCamera = function() {
-        if(camera != null) {
-            var i;
-            var params = getConfigParams();
-            
-            for(i = 0; i < params.length; i++) {
-                camera.setConfigValue(params[i].param, cameraParams[params[i].param], function (err) {
+    },
+    resetParams: function() {
+        if(this.camera != null) {
+            for(var i = 0; i < this.configParams.length; i++) {
+                this.camera.setConfigValue(this.configParams[i].param, this.cameraParams[this.configParams[i].param], function (err) {
                     if(err) throw err;
                 });
             }
         }
-    }
-    
-    var enableShutter = function() {
-        gpio.write(config.shutterFocusPin, true, function(err) {
-            if (err) throw err;
-            gpio.write(config.shutterReleasePin, true, function(err) {
-                if (err) throw err;
-                setTimeout(disableShutter, config.shutterPressedTime);
+    },
+    getSettings: function() {
+        if(this.camera != null) {
+            var cameraObj = this;
+            this.camera.getConfig(function (er, settings) {
+                cameraObj.name = settings.main.children['status'].children['cameramodel'].value;
+                cameraObj.aperture = settings.main.children['capturesettings'].children['f-number'].value;
+                cameraObj.speed = settings.main.children['capturesettings'].children['shutterspeed2'].value;
+                cameraObj.iso = settings.main.children['imgsettings'].children['iso'].value;
+                
+                cameraObj.apertureArr = settings.main.children['capturesettings'].children['f-number'].choices;
+                cameraObj.speedArr = settings.main.children['capturesettings'].children['shutterspeed2'].choices;
+                cameraObj.isoArr = settings.main.children['imgsettings'].children['iso'].choices;
+                
+                console.log("camera: " + cameraObj.camera.model);
+                console.log("port: " + cameraObj.camera.port);
             });
-        });
-    }
-    
-    var disableShutter = function() {
-        gpio.write(config.shutterReleasePin, false, function(err) {
-            if (err) throw err;
-            gpio.write(config.shutterFocusPin, false, function(err) {
-                if (err) throw err;
-            });
-        });
-    }
-    
-    var motorMove = function(direction, duration) {
-        var sliderPin = (direction=='left' ? config.sliderPinLeft : config.sliderPinRight);
-        
-        if(intervalMTimeout)
-            clearTimeout(intervalMTimeout);
-        
-        gpio.write(sliderPin, true, function(err) {
-            if (err) throw err;
-            
-            intervalMTimeout = setTimeout(function() {
-                sliderStop();
-            }, parseInt(duration));
-            
-            if(intervalSliderCheck == null) {
-                intervalSliderCheck = setInterval(function() {
-                    gpio.read(config.sliderLimitPin, function(err, value) {
-                        if(!value) {
-                            sliderStop();
-                            _this.intervalStop();
-                        }
-                    });
-                }, 100);
-            }
-        });
-    }
-    
-    var sliderMove = function() {
-        if(intervalStarted && !intervalPaused) {
-            motorMove(intervalMDirection, intervalMTime);
         }
-    }
-    
-    var sliderStop = function() {
-        gpio.write(config.sliderPinLeft, false, function(err) {
-            if (err) throw err;
-        });
-        
-        gpio.write(config.sliderPinRight, false, function(err) {
-            if (err) throw err;
-        });
-        
-        clearInterval(intervalSliderCheck);
-        intervalSliderCheck = null;
-    }
-    
-    var takePicture = function(index, test) {
-        if(camera != null && (intervalShutter == 'soft' || test)) {
-            console.log("take picture");
-            camera.takePicture({download: intervalHistogram || test}, function (er, data) {
-                if(!intervalHistogram && !test)
+    },
+    takePicture: function(index, histogram) {
+        if(this.camera != null) {
+            var cameraObj = this;
+            
+            var download = histogram && !this.busy;
+            if(download) {
+                console.log("take picture ... start downloading picture");
+                this.busy = true;
+            }
+            else {
+                console.log("take picture");
+            }
+            
+            this.camera.takePicture({download: download}, function (er, data) {
+                if(!download)
                     return;
                 
                 var imageFile = 'camera_' + index;
                 var imagePath = __dirname + '/tmp/' + imageFile + '.jpg';
                 var histogramPath = __dirname + '/public/histo/' + imageFile + '.png';
                 
-                console.log("download picture");
+                console.log("picture downloaded ... start building histogram");
                 fs.writeFile(imagePath, data, function(err) {
                     if(err) throw err;
                     var histogramCmd = config.convertPath + " " + imagePath + " -define histogram:unique-colors=false histogram:" + histogramPath;
-                    console.log("build histogram");
-                    exec(histogramCmd, function(error, stdout, stderr) {});
+                    exec(histogramCmd, function(error, stdout, stderr) {
+                        cameraObj.busy = false;
+                        console.log("histogram built");
+                    });
                 });
             });
         }
-        else {
-            enableShutter();
-        }
-    }
-    
-    var intervalTakePicture = function(index) {
-        if(intervalStarted && !intervalPaused) {
-            intervalIndex++;
-            takePicture(index, false);
-            
-            if(intervalIndex >= intervalShots) {
-                _this.intervalStop();
-            }
-            
-            if(intervalSlider) {
-                var sliderDelay = camera != null ? (eval(settingsSpeed) * 1000) + 500 : 1000;
-
-                setTimeout(function() {
-                    sliderMove();
-                }, sliderDelay);
-            }
-        }
-    }
-    
-    var intervalClearInterval = function() {
-        if(intervalTimer)
-            clearInterval(intervalTimer);
-        if(intervalTimeout)
-            clearTimeout(intervalTimeout);
-        if(intervalSliderCheck)
-            clearInterval(intervalSliderCheck);
-        intervalSliderCheck = null;
-    }
-    
-    this.getCameraSettings = function() {
-        if(camera != null) {
-            camera.getConfig(function (er, settings) {
-                settingsAperture = settings.main.children['capturesettings'].children['f-number'].value;
-                settingsSpeed = settings.main.children['capturesettings'].children['shutterspeed2'].value;
-                settingsIso = settings.main.children['imgsettings'].children['iso'].value;
-                
-                settingsApertureArr = settings.main.children['capturesettings'].children['f-number'].choices;
-                settingsSpeedArr = settings.main.children['capturesettings'].children['shutterspeed2'].choices;
-                settingsIsoArr = settings.main.children['imgsettings'].children['iso'].choices;
-                
-                intervalShutter = "soft";
-                intervalHistogram = true;
-                
-                console.log("camera: " + camera.model);
-                console.log("port: " + camera.port);
-            });
-        }
-        else {
-            intervalShutter = "hard";
-            intervalHistogram = false;
-        }
-        
-        intervalSlider = false;
-        intervalMDirection = 'left';
-        intervalMTime = '250';
-    }
-    
-    this.changeAperture = function(newAperture) {
-        if(camera != null) {
-            camera.setConfigValue('f-number', newAperture, function (err) {
-                if(!err) settingsAperture = newAperture;
-            });
-        }
-    }
-
-    this.changeSpeed = function(newSpeed) {
-        if(camera != null) {
-            camera.setConfigValue('shutterspeed2', newSpeed, function (err) {
-                if(!err) settingsSpeed = newSpeed;
-            });
-        }
-    }
-
-    this.changeIso = function(newIso) {
-        if(camera != null) {
-            camera.setConfigValue('iso', newIso, function (err) {
-                if(!err) settingsIso = newIso;
-            });
-        }
-    }
-    
-    this.testShoot = function(index) {
-        setCamera();
+    },
+    testShoot: function(index) {
+        this.setParams();
+        var cameraObj = this;
         
         setTimeout(function() {
-            takePicture(index, true);
+            cameraObj.takePicture(index, true);
         
             setTimeout(function() {
-                resetCamera();
+                cameraObj.resetParams();
             }, 1000);
         }, 1000);
+    },
+    changeAperture: function(newAperture) {
+        if(this.camera != null) {
+            var cameraObj = this;
+            this.camera.setConfigValue('f-number', newAperture, function (err) {
+                if(!err) cameraObj.aperture = newAperture;
+            });
+        }
+    },
+    changeSpeed: function(newSpeed) {
+        if(this.camera != null) {
+            var cameraObj = this;
+            this.camera.setConfigValue('shutterspeed2', newSpeed, function (err) {
+                if(!err) cameraObj.speed = newSpeed;
+            });
+        }
+    },
+    changeIso: function(newIso) {
+        if(this.camera != null) {
+            var cameraObj = this;
+            this.camera.setConfigValue('iso', newIso, function (err) {
+                if(!err) cameraObj.iso = newIso;
+            });
+        }
     }
-    
-    this.intervalStart = function(settings, index) {
-        if(intervalStarted)
-            return false;
-        
-        setCamera();
-        
-        intervalDelay = parseInt(settings.delay);
-        intervalInterval = settings.interval;
-        intervalShots = parseInt(settings.shots);
-        intervalShutter = settings.shutter;
-        intervalHistogram = settings.histogram;
-        intervalSlider = settings.slider;
-        intervalMDirection = settings.mdirection;
-        intervalMTime = settings.mtime;
-        intervalStarted = true;
-        intervalPaused = false;
-        intervalIndex = 0;
-        
-        intervalClearInterval();
-        
-        intervalTimeout = setTimeout(function() {
-            intervalTakePicture(index);
-            intervalTimer = setInterval(function() {
-                intervalTakePicture(index);
-            }, parseFloat(intervalInterval) * 1000);
-        }, intervalDelay * 1000);
-        
-        return true;
-    }
-    
-    this.intervalStop = function() {
-        if(!intervalStarted)
-            return false;
-        
-        setTimeout(function() {
-            resetCamera();
-        }, 1000);
-        
-        intervalStarted = false;
-        intervalPaused = false;
-        intervalIndex = 0;
-        intervalClearInterval();
-        
-        return true;
-    }
-    
-    this.intervalPause = function() {
-        if(!intervalStarted || intervalPaused)
-            return false;
-        
-        intervalPaused = true;
-        
-        return true;
-    }
-    
-    this.intervalResume = function() {
-        if(!intervalStarted || !intervalPaused)
-            return false;
-        
-        intervalPaused = false;
-        
-        return true;
-    }
-    
-    this.getSettingsAperture = function() {
-        return settingsAperture;
-    }
-    
-    this.getSettingsSpeed = function() {
-        return settingsSpeed;
-    }
+};
 
-    this.getSettingsIso = function() {
-        return settingsIso;
-    }
-    
-    this.getSettingsApertureArr = function() {
-        return settingsApertureArr;
-    }
-    
-    this.getSettingsSpeedArr = function() {
-        return settingsSpeedArr;
-    }
-
-    this.getSettingsIsoArr = function() {
-        return settingsIsoArr;
-    }
-    
-    this.getCamera = function() {
-        return camera;
-    }
-    
-    this.isIntervalStarted = function() {
-        return intervalStarted;
-    }
-    
-    this.isIntervalPaused = function() {
-        return intervalPaused;
-    }
-    
-    this.getIntervalDelay = function() {
-        return intervalDelay;
-    }
-    
-    this.getIntervalInterval = function() {
-        return intervalInterval;
-    }
-
-    this.getIntervalShots = function() {
-        return intervalShots;
-    }
-
-    this.getIntervalIndex = function() {
-        return intervalIndex;
-    }
-    
-    this.getIntervalShutter = function() {
-        return intervalShutter;
-    }
-    
-    this.getIntervalHistogram = function() {
-        return intervalHistogram;
-    }
-    
-    this.getIntervalSlider = function() {
-        return intervalSlider;
-    }
-    
-    this.getIntervalMDirection = function() {
-        return intervalMDirection;
-    }
-    
-    this.getIntervalMTime = function() {
-        return intervalMTime;
-    }
-    
-    this.motorMove = function(direction) {
-        motorMove(direction, 200);
-    }
-}
+module.exports = Camera;

@@ -31,6 +31,7 @@ function shutdown() {
 function startMotor(direction) {
     motorTimer = setInterval(function() {
         $.post("/api/status/motor", {
+            camera: cameraIndex,
             dir: direction=='motor_left' ? 1 : 2
         });
     }, 100);

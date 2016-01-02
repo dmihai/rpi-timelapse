@@ -1,43 +1,47 @@
-exports.set = function(req, res) {
-    var camera = getRequestCamera(req);
-    if(camera) {
-        if(req.param('aperture') != camera.getSettingsAperture())
-            camera.changeAperture(req.param('aperture'));
-        if(req.param('speed') != camera.getSettingsSpeed())
-            camera.changeSpeed(req.param('speed'));
-        if(req.param('iso') != camera.getSettingsIso())
-            camera.changeIso(req.param('iso'));
-        res.status(200).send('OK');
-    }
-    else {
-        res.status(500).send('No camera');
-    }
-}
+var common = require('./../common');
 
-exports.refresh = function(req, res) {
-    var camera = getRequestCamera(req);
-    if(camera) {
-        res.status(200).send({
-            aperture: camera.getSettingsAperture(),
-            speed: camera.getSettingsSpeed(),
-            iso: camera.getSettingsIso(),
-            apertureArr: camera.getSettingsApertureArr(),
-            speedArr: camera.getSettingsSpeedArr(),
-            isoArr: camera.getSettingsIsoArr(),
-            interval: camera.isIntervalStarted()
-        });
-    }
-    else {
-        res.status(500).send('No camera');
-    }
-}
-
-exports.shoot = function(req, res) {
-    var camera = getRequestCamera(req);
-    if(camera) {
-        camera.testShoot(req.param('camera'));
-    }
-    else {
-        res.status(500).send('No camera');
+module.exports = function(camArr) {
+    return {
+        set: function(req, res) {
+            var camera = common.getRequestCamera(req, camArr);
+            if(camera) {
+                if(req.body.aperture != camera.aperture)
+                    camera.changeAperture(req.body.aperture);
+                if(req.body.speed != camera.speed)
+                    camera.changeSpeed(req.body.speed);
+                if(req.body.iso != camera.iso)
+                    camera.changeIso(req.body.iso);
+                res.status(200).send('OK');
+            }
+            else {
+                res.status(500).send('No camera');
+            }
+        },
+        refresh: function(req, res) {
+            var camera = common.getRequestCamera(req, camArr);
+            if(camera) {
+                res.status(200).send({
+                    aperture: camera.aperture,
+                    speed: camera.speed,
+                    iso: camera.iso,
+                    apertureArr: camera.apertureArr,
+                    speedArr: camera.speedArr,
+                    isoArr: camera.isoArr,
+                    interval: camera.interval.isStarted
+                });
+            }
+            else {
+                res.status(200).send({});
+            }
+        },
+        shoot: function(req, res) {
+            var camera = common.getRequestCamera(req, camArr);
+            if(camera) {
+                camera.testShoot(common.getRequestCameraIndex(req, camArr));
+            }
+            else {
+                res.status(500).send('No camera');
+            }
+        }
     }
 }

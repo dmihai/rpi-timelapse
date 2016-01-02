@@ -60,14 +60,6 @@
             <input id="time" class="form-control" type="text" value="" readonly>
           </div>
         </div>
-        <div id="shutter_control" class="form-group">
-          <label for="shutter" class="col-xs-2 control-label">Shutter</label>
-          <div class="col-xs-3">
-            <input type="hidden" id="shutter" value="soft" />
-            <input id="shutter_soft" class="btn btn-success active" type="button" value="Soft" onclick="optionChanged('shutter', 'soft')" />
-            <input id="shutter_hard" class="btn btn-success" type="button" value="Hard" onclick="optionChanged('shutter', 'hard')" />
-          </div>
-        </div>
         <div id="histogram_control" class="form-group">
           <label for="histogram" class="col-xs-2 control-label">Histogram</label>
           <div class="col-xs-3">
@@ -115,6 +107,7 @@
     </div>
 	<script>
 	$(document).ready(function() {
+        sliderChanged('0');
 		getInterval();
         buildCameraMenu("index.html");
 		
