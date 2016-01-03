@@ -16,13 +16,23 @@ function Camera(camera) {
     this.speedArr = [];
     this.isoArr = [];
     
-    this.configParams = {};
+    this.configParams = [];
     this.cameraParams = {};
     
     this.busy = false;
 }
 
 Camera.prototype = {
+    getConfigParams: function() {
+        var pattern;
+        
+        for(var i = 0; i < config.cameraSettings.length; i++) {
+            pattern = new RegExp(config.cameraSettings[i].model, "i");
+            if(pattern.test(this.name)) {
+                this.configParams = this.configParams.concat(config.cameraSettings[i].params);
+            }
+        }
+    },
     setParams: function() {
         if(this.camera != null) {
             var cameraObj = this;
@@ -58,6 +68,8 @@ Camera.prototype = {
                 cameraObj.apertureArr = settings.main.children['capturesettings'].children['f-number'].choices;
                 cameraObj.speedArr = settings.main.children['capturesettings'].children['shutterspeed2'].choices;
                 cameraObj.isoArr = settings.main.children['imgsettings'].children['iso'].choices;
+                
+                cameraObj.getConfigParams();
                 
                 console.log("camera: " + cameraObj.camera.model);
                 console.log("port: " + cameraObj.camera.port);

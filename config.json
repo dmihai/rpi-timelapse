@@ -18,21 +18,31 @@
                     "category": "settings",
                     "param": "capturetarget",
                     "value": "Memory card"
-                }
-            ]
-        },
-        {
-            "model": "nikon.*(d7000|d5100)",
-            "params": [
-                {
-                    "category": "imgsettings",
-                    "param": "imagesize",
-                    "value": "2464x1632"
                 },
                 {
                     "category": "capturesettings",
                     "param": "imagequality",
                     "value": "NEF+Basic"
+                }
+            ]
+        },
+        {
+            "model": "(d7000|d5100)",
+            "params": [
+                {
+                    "category": "imgsettings",
+                    "param": "imagesize",
+                    "value": "2464x1632"
+                }
+            ]
+        },
+        {
+            "model": "d7200",
+            "params": [
+                {
+                    "category": "imgsettings",
+                    "param": "imagesize",
+                    "value": "2992x2000"
                 }
             ]
         }

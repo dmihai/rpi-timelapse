@@ -20,12 +20,12 @@ function Interval(camera) {
 }
 
 Interval.prototype = {
-    takePicture: function(index) {
+    takePicture: function(cameraIndex) {
         if(this.isStarted && !this.isPaused) {
             var intervalObj = this;
             
             this.index++;
-            this.camera.takePicture(index, this.hasHistogram);
+            this.camera.takePicture(cameraIndex, this.hasHistogram);
             
             if(this.index >= this.shots) {
                 this.stop();
@@ -46,7 +46,7 @@ Interval.prototype = {
         if(this.timeout != null)
             clearTimeout(this.timeout);
     },
-    start: function(settings, index) {
+    start: function(settings, cameraIndex) {
         if(this.isStarted)
             return false;
         
@@ -68,9 +68,9 @@ Interval.prototype = {
         this.clearAllIntervals();
         
         this.timeout = setTimeout(function() {
-            intervalObj.takePicture(index);
+            intervalObj.takePicture(cameraIndex);
             intervalObj.timer = setInterval(function() {
-                intervalObj.takePicture(index);
+                intervalObj.takePicture(cameraIndex);
             }, parseFloat(intervalObj.interval) * 1000);
         }, intervalObj.delay * 1000);
         
