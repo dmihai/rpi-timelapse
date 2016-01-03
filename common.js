@@ -14,7 +14,7 @@ module.exports = {
     getRequestCamera: function(req, camArr) {
         return camArr[this.getRequestCameraIndex(req, camArr)];
     },
-    refreshCameras: function(camArr) {
+    refreshCameras: function(camArr, slider, io) {
         var gPhoto = new gphoto2.GPhoto2();
         var commonObj = this;
         
@@ -38,11 +38,17 @@ module.exports = {
                 if(!found) {
                     camera = new Camera(list[i]);
                     camera.interval = new Interval(camera);
-                    camera.slider = new Slider(camera);
+                    camera.slider = slider;
+                    camera.io = io;
                     camera.getSettings();
                     
                     camArr.push(camera);
                 }
+            }
+            
+            // refresh camera index
+            for(i = 0; i < camArr.length; i++) {
+                camArr[i].index = i;
             }
         });
     },

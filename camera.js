@@ -4,8 +4,10 @@ var config = require('./config');
 
 function Camera(camera) {
     this.camera = camera;
+    this.index = 0;
     this.interval = null;
     this.slider = null;
+    this.io = null;
     this.name = "";
     
     this.aperture = null;
@@ -73,10 +75,11 @@ Camera.prototype = {
                 
                 console.log("camera: " + cameraObj.camera.model);
                 console.log("port: " + cameraObj.camera.port);
+                console.log("index: " + cameraObj.index);
             });
         }
     },
-    takePicture: function(index, histogram) {
+    takePicture: function(histogram) {
         if(this.camera != null) {
             var cameraObj = this;
             
@@ -93,7 +96,7 @@ Camera.prototype = {
                 if(!download)
                     return;
                 
-                var imageFile = 'camera_' + index;
+                var imageFile = 'camera_' + cameraObj.index;
                 var imagePath = __dirname + '/tmp/' + imageFile + '.jpg';
                 var histogramPath = __dirname + '/public/histo/' + imageFile + '.png';
                 
@@ -103,18 +106,19 @@ Camera.prototype = {
                     var histogramCmd = config.convertPath + " " + imagePath + " -define histogram:unique-colors=false histogram:" + histogramPath;
                     exec(histogramCmd, function(error, stdout, stderr) {
                         cameraObj.busy = false;
+                        cameraObj.emitHistogram();
                         console.log("histogram built");
                     });
                 });
             });
         }
     },
-    testShoot: function(index) {
+    testShoot: function() {
         this.setParams();
         var cameraObj = this;
         
         setTimeout(function() {
-            cameraObj.takePicture(index, true);
+            cameraObj.takePicture(true);
         
             setTimeout(function() {
                 cameraObj.resetParams();
@@ -144,6 +148,11 @@ Camera.prototype = {
                 if(!err) cameraObj.iso = newIso;
             });
         }
+    },
+    emitHistogram: function() {
+        this.io.emit('histogram', {
+            camera: this.index,
+        });
     }
 };
 

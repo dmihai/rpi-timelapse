@@ -10,6 +10,7 @@
     <script src="js/jquery-1.11.1.min.js"></script>
 	<script src="js/common.js"></script>
     <script src="js/settings.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
   </head>
   <body>
     <div class="container">
@@ -67,13 +68,17 @@
       </form>
     
 	<script>
+    var socket = io();
+    
 	$(document).ready(function() {
 		getSettings();
         buildCameraMenu("settings.html");
         updateHistogram();
-        setInterval(function() {
-            updateHistogram();
-        }, 1000);
+        
+        socket.on('histogram', function(data) {
+            if(data.camera == cameraIndex)
+                updateHistogram();
+        });
 	});
 	</script>
 

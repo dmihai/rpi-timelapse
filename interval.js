@@ -20,12 +20,12 @@ function Interval(camera) {
 }
 
 Interval.prototype = {
-    takePicture: function(cameraIndex) {
+    takePicture: function() {
         if(this.isStarted && !this.isPaused) {
             var intervalObj = this;
             
             this.index++;
-            this.camera.takePicture(cameraIndex, this.hasHistogram);
+            this.camera.takePicture(this.hasHistogram);
             
             if(this.index >= this.shots) {
                 this.stop();
@@ -38,6 +38,8 @@ Interval.prototype = {
                     intervalObj.camera.slider.move(intervalObj.mDirection, intervalObj.mTime, intervalObj);
                 }, sliderDelay);
             }
+            
+            this.emitStatus();
         }
     },
     clearAllIntervals: function() {
@@ -46,7 +48,7 @@ Interval.prototype = {
         if(this.timeout != null)
             clearTimeout(this.timeout);
     },
-    start: function(settings, cameraIndex) {
+    start: function(settings) {
         if(this.isStarted)
             return false;
         
@@ -68,11 +70,13 @@ Interval.prototype = {
         this.clearAllIntervals();
         
         this.timeout = setTimeout(function() {
-            intervalObj.takePicture(cameraIndex);
+            intervalObj.takePicture();
             intervalObj.timer = setInterval(function() {
-                intervalObj.takePicture(cameraIndex);
+                intervalObj.takePicture();
             }, parseFloat(intervalObj.interval) * 1000);
         }, intervalObj.delay * 1000);
+        
+        this.emitStatus();
         
         return true;
     },
@@ -91,6 +95,8 @@ Interval.prototype = {
         this.index = 0;
         this.clearAllIntervals();
         
+        this.emitStatus();
+        
         return true;
     },
     pause: function() {
@@ -98,6 +104,8 @@ Interval.prototype = {
             return false;
         
         this.isPaused = true;
+        
+        this.emitStatus();
         
         return true;
     },
@@ -107,7 +115,19 @@ Interval.prototype = {
         
         this.isPaused = false;
         
+        this.emitStatus();
+        
         return true;
+    },
+    emitStatus: function() {
+        this.camera.io.emit('status', {
+            camera: this.camera.index,
+            started: this.isStarted,
+            paused: this.isPaused,
+            interval: this.interval,
+            index: this.index,
+            shots: this.shots
+        });
     }
 }
 

@@ -10,6 +10,7 @@
     <script src="js/jquery-1.11.1.min.js"></script>
 	<script src="js/common.js"></script>
     <script src="js/status.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
   </head>
   <body>
     <div class="container">
@@ -56,12 +57,16 @@
     </div>
     
     <script>
+    var socket = io();
+    
 	$(document).ready(function() {
         getStatus();
         buildCameraMenu("status.html");
-		setInterval(function() {
-            getStatus();
-        }, 1000);
+        
+        socket.on('status', function(data) {
+            if(data.camera == cameraIndex)
+                setStatus(data);
+        });
         
         motorTimer = null;
         $("#motor_left,#motor_right")
@@ -70,7 +75,7 @@
             })
             .on("touchend mouseout mouseup", function() {
                 stopMotor();
-            })
+            });
 	});
 	</script>
 

@@ -2,16 +2,18 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var gpio = require('rpi-gpio');
 
+var app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+
 var camArr = [];
 
 var config = require('./config');
 var common = require('./common');
+var slider = new (require('./slider'))();
 var intervalRoute = require('./routes/interval')(camArr);
 var settingsRoute = require('./routes/settings')(camArr);
-var statusRoute = require('./routes/status')(camArr);
-
-// the app
-var app = express();
+var statusRoute = require('./routes/status')(camArr, slider, io);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -37,6 +39,12 @@ app.get('/api/status/addCamera', statusRoute.addCamera);
 app.post('/api/status/shutdown', statusRoute.shutdown);
 app.post('/api/status/motor', statusRoute.motor);
 
+io.on('connection', function(socket) {
+    socket.on('motor', function(msg) {
+        slider.move(msg.dir, 120, null);
+    });
+});
+
 gpio.setup(config.shutterFocusPin, gpio.DIR_OUT, function(err) {
     if(err) throw err;
 });
@@ -58,6 +66,6 @@ gpio.setup(config.sliderLimitPin, gpio.DIR_IN, function(err) {
 });
 
 // start server
-var server = app.listen(80);
+server.listen(80);
 
-common.refreshCameras(camArr);
+common.refreshCameras(camArr, slider, io);

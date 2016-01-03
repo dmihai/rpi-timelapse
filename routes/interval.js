@@ -14,7 +14,7 @@ module.exports = function(camArr) {
                     slider: req.body.slider=='1',
                     mdirection: req.body.mdirection,
                     mtime: req.body.mtime
-                }, (req.query.camera || '0'))) {
+                })) {
                     res.status(200).send('OK');
                 }
                 else {

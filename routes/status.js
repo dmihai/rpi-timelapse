@@ -2,7 +2,7 @@ var exec = require('child_process').exec;
 var config = require('../config');
 var common = require('./../common');
 
-module.exports = function(camArr) {
+module.exports = function(camArr, slider, io) {
     return {
         refresh: function(req, res) {
             var camera = common.getRequestCamera(req, camArr);
@@ -23,14 +23,14 @@ module.exports = function(camArr) {
             var cameras = [];
             for(var i = 0; i < camArr.length; i++) {
                 cameras[cameras.length] = {
-                    index: i,
+                    index: camArr[i].index,
                     model: camArr[i].name
                 };
             }
             res.status(200).send(cameras);
         },
         addCamera: function(req, res) {
-            common.refreshCameras(camArr);
+            common.refreshCameras(camArr, slider, io);
             res.status(200).send('OK');
         },
         shutdown: function(req, res) {

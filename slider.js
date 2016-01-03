@@ -1,7 +1,7 @@
 var config = require('./config');
 var gpio = require('rpi-gpio');
 
-function Slider(camera) {
+function Slider() {
     this.timeout = null;
     this.intervalCheck = null;
 }
@@ -21,7 +21,7 @@ Slider.prototype = {
                 sliderObj.stop();
             }, parseInt(duration));
             
-            if(sliderObj.intervalCheck == null) {
+            if(interval != null && sliderObj.intervalCheck == null) {
                 sliderObj.intervalCheck = setInterval(function() {
                     gpio.read(config.sliderLimitPin, function(err, value) {
                         if(!value) {
