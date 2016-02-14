@@ -13,6 +13,10 @@ pi@raspberrypi:~ $ sudo apt-get install git
 
 2. Install Wifi
 
+hostapd install:
+https://jenssegers.com/43/Realtek-RTL8188-based-access-point-on-Raspberry-Pi
+https://github.com/jenssegers/RTL8188-hostapd
+
 pi@raspberrypi:~ $ sudo apt-get install hostapd
 
 pi@raspberrypi:~ $ sudo apt-get install isc-dhcp-server
