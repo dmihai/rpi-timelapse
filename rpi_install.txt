@@ -98,6 +98,7 @@ pi@raspberrypi:~ $ mkdir nodetemp
 pi@raspberrypi:~ $ cd nodetemp
 
 pi@raspberrypi:~/nodetemp $ wget http://conoroneill.net.s3.amazonaws.com/wp-content/uploads/2015/07/node-v0.10.40-linux-arm-v7.tar.gz
+[pi@raspberrypi:~/nodetemp $ wget http://nodejs.org/dist/v0.10.28/node-v0.10.28-linux-arm-pi.tar.gz]
 
 pi@raspberrypi:~/nodetemp $ tar -zxvf node-v0.10.40-linux-arm-v7.tar.gz
 
