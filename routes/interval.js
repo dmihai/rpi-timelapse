@@ -10,10 +10,12 @@ module.exports = function(camArr) {
                     delay: req.body.delay,
                     interval: req.body.interval,
                     shots: req.body.shots,
+                    shutter: req.body.shutter,
                     histogram: req.body.histogram=='1',
                     slider: req.body.slider=='1',
                     mdirection: req.body.mdirection,
-                    mtime: req.body.mtime
+                    mtime: req.body.mtime,
+                    mdelay: req.body.mdelay
                 })) {
                     res.status(200).send('OK');
                 }
@@ -80,10 +82,13 @@ module.exports = function(camArr) {
                     interval: camera.interval.interval,
                     shots: camera.interval.shots,
                     index: camera.interval.index,
+                    shutter: camera.interval.shutter,
+                    hasCamera: camera.camera != null,
                     histogram: camera.interval.hasHistogram ? '1' : '0',
                     slider: camera.interval.hasSlider ? '1' : '0',
                     mdirection: camera.interval.mDirection,
-                    mtime: camera.interval.mTime
+                    mtime: camera.interval.mTime,
+                    mdelay: camera.interval.mDelay
                 });
             }
             else {

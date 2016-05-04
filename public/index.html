@@ -60,6 +60,14 @@
             <input id="time" class="form-control" type="text" value="" readonly>
           </div>
         </div>
+        <div id="shutter_control" class="form-group">
+          <label for="shutter" class="col-xs-2 control-label">Shutter</label>
+          <div class="col-xs-3">
+            <input type="hidden" id="shutter" value="hard" />
+            <input id="shutter_hard" class="btn btn-success active" type="button" value="Hard" onclick="optionChanged('shutter', 'hard')" />
+            <input id="shutter_soft" class="btn btn-success" type="button" value="Soft" onclick="optionChanged('shutter', 'soft')" />
+          </div>
+        </div>
         <div id="histogram_control" class="form-group">
           <label for="histogram" class="col-xs-2 control-label">Histogram</label>
           <div class="col-xs-3">
@@ -90,8 +98,18 @@
             <input id="mtime" class="form-control" type="text" value="300">
           </div>
           <div class="col-xs-2">
-            <input class="btn btn-default" type="button" value="+" onclick="updateValue('mtime', 20)">
-            <input class="btn btn-default" type="button" value="-" onclick="updateValue('mtime', -20)">
+            <input class="btn btn-default" type="button" value="+" onclick="updateValue('mtime', 25)">
+            <input class="btn btn-default" type="button" value="-" onclick="updateValue('mtime', -25)">
+          </div>
+        </div>
+        <div id="mdelay_control" class="form-group">
+          <label for="mdelay" class="col-xs-2 control-label">Delay</label>
+          <div class="col-xs-2">
+            <input id="mdelay" class="form-control" type="text" value="300">
+          </div>
+          <div class="col-xs-2">
+            <input class="btn btn-default" type="button" value="+" onclick="updateValue('mdelay', 50)">
+            <input class="btn btn-default" type="button" value="-" onclick="updateValue('mdelay', -50)">
           </div>
         </div>
         <div class="form-group">

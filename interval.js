@@ -10,10 +10,12 @@ function Interval(camera) {
     this.interval = config.intervalInterval;
     this.shots = config.intervalShots;
     this.index = 0;
+    this.shutter = camera.camera == null ? 'hard' : 'soft';
     this.hasHistogram = true;
     this.hasSlider = false;
     this.mDirection = 'left';
     this.mTime = '250';
+    this.mDelay = '500';
     
     this.timer = null;
     this.timeout = null;
@@ -32,7 +34,7 @@ Interval.prototype = {
             }
             
             if(this.hasSlider) {
-                var sliderDelay = this.camera != null ? (eval(this.camera.speed) * 1000) + 500 : 1000;
+                var sliderDelay = this.camera != null ? (eval(this.camera.speed) * 1000) + 500 : this.mDelay;
 
                 setTimeout(function() {
                     intervalObj.camera.slider.move(intervalObj.mDirection, intervalObj.mTime, intervalObj);
@@ -59,10 +61,12 @@ Interval.prototype = {
         this.delay = parseInt(settings.delay);
         this.interval = settings.interval;
         this.shots = parseInt(settings.shots);
+        this.shutter = settings.shutter;
         this.hasHistogram = settings.histogram;
         this.hasSlider = settings.slider;
         this.mDirection = settings.mdirection;
         this.mTime = settings.mtime;
+        this.mDelay = settings.mdelay;
         this.isStarted = true;
         this.isPaused = false;
         this.index = 0;

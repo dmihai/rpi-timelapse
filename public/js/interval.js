@@ -12,6 +12,9 @@ function getInterval() {
 		$("#delay").val(data.delay);
 		$("#interval").val(data.interval);
 		$("#count").val(data.shots);
+        $("#mtime").val(data.mtime);
+        $("#mdelay").val(data.mdelay);
+        
         intervalIndex = data.index;
         intervalStarted = data.started;
         intervalPaused = data.paused;
@@ -19,9 +22,11 @@ function getInterval() {
         optionChanged('histogram', data.histogram);
         optionChanged('slider', data.slider);
         optionChanged('mdirection', data.mdirection);
-        checkFields();
-        $("#mtime").val(data.mtime);
+        optionChanged('shutter', data.shutter);
         
+        displayControl("shutter", data.hasCamera);
+        
+        checkFields();
         showIntervalButtons();
         updateTime();
 	});
@@ -41,10 +46,12 @@ function startInterval() {
             delay: $("#delay").val(),
             interval: $("#interval").val(),
             shots: $("#count").val(),
+            shutter: $("#shutter").val(),
             histogram: $("#histogram").val(),
             slider: $("#slider").val(),
             mdirection: $("#mdirection").val(),
-            mtime: $("#mtime").val()
+            mtime: $("#mtime").val(),
+            mdelay: $("#mdelay").val()
         })
         .done(function(data) {
             if(data == 'OK') {
@@ -108,13 +115,17 @@ function optionChanged(option, value) {
 
 function checkFields() {
     var hasSlider = $("#slider").val() == '1';
-    toggleField("mdirection_control", hasSlider);
-    toggleField("mtime_control", hasSlider);
+    var isHardShutter = $("#shutter").val() == 'hard';
+    
+    displayControl("histogram", !isHardShutter);
+    displayControl("mdirection", hasSlider);
+    displayControl("mtime", hasSlider);
+    displayControl("mdelay", hasSlider && isHardShutter);
 }
 
-function toggleField(field, show) {
+function displayControl(field, show) {
     if(show)
-        $("#" + field).show();
+        $("#" + field + "_control").show();
     else
-        $("#" + field).hide();
+        $("#" + field + "_control").hide();
 }
