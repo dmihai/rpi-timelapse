@@ -72,8 +72,8 @@
           <label for="slider" class="col-xs-2 control-label">Slider</label>
           <div class="col-xs-3">
             <input type="hidden" id="slider" value="0" />
-            <input id="slider_1" class="btn btn-success" type="button" value="Yes" onclick="optionChanged('slider', '1'); sliderChanged('1');" />
-            <input id="slider_0" class="btn btn-success active" type="button" value="No" onclick="optionChanged('slider', '0'); sliderChanged('0');" />
+            <input id="slider_1" class="btn btn-success" type="button" value="Yes" onclick="optionChanged('slider', '1')" />
+            <input id="slider_0" class="btn btn-success active" type="button" value="No" onclick="optionChanged('slider', '0')" />
           </div>
         </div>
         <div id="mdirection_control" class="form-group">
@@ -107,17 +107,10 @@
     </div>
 	<script>
 	$(document).ready(function() {
-        sliderChanged('0');
 		getInterval();
         buildCameraMenu("index.html");
 		
-		$("#delay").on('change', function() {
-			updateTime();
-		});
-		$("#interval").on('change', function() {
-			updateTime();
-		});
-		$("#count").on('change', function() {
+		$("#delay, #interval, #count").on('change', function() {
 			updateTime();
 		});
 	});

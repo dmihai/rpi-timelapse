@@ -18,8 +18,8 @@ function getInterval() {
         
         optionChanged('histogram', data.histogram);
         optionChanged('slider', data.slider);
-        sliderChanged(data.slider);
         optionChanged('mdirection', data.mdirection);
+        checkFields();
         $("#mtime").val(data.mtime);
         
         showIntervalButtons();
@@ -102,15 +102,19 @@ function optionChanged(option, value) {
     $("#" + option).val(value);
     $("input[id^='" + option + "_'].active").removeClass("active");
     $("#" + option + "_" + value).addClass("active");
+    
+    checkFields();
 }
 
-function sliderChanged(value) {
-    if(value == '1') {
-        $("#mdirection_control").show();
-        $("#mtime_control").show();
-    }
-    else {
-        $("#mdirection_control").hide();
-        $("#mtime_control").hide();
-    }
+function checkFields() {
+    var hasSlider = $("#slider").val() == '1';
+    toggleField("mdirection_control", hasSlider);
+    toggleField("mtime_control", hasSlider);
+}
+
+function toggleField(field, show) {
+    if(show)
+        $("#" + field).show();
+    else
+        $("#" + field).hide();
 }
