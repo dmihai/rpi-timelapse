@@ -36,14 +36,13 @@ module.exports = {
                 }
                 
                 if(!found) {
-                    camera = new Camera(list[i]);
-                    camera.interval = new Interval(camera);
-                    camera.slider = slider;
-                    camera.io = io;
-                    camera.getSettings();
-                    
-                    camArr.push(camera);
+                    camArr.push(commonObj.newCamera(list[i]));
                 }
+            }
+            
+            // add default camera
+            if(camArr.length == 0) {
+                camArr.push(commonObj.newCamera(null));
             }
             
             // refresh camera index
@@ -70,6 +69,18 @@ module.exports = {
         return false;
     },
     checkCameras: function(cam1, cam2) {
+        if(cam1 == null || cam2 == null)
+            return false;
+        
         return cam1.camera == cam2.camera && cam1.port == cam2.port;
+    }
+    newCamera: function(gPhotoCamera) {
+        camera = new Camera(gPhotoCamera);
+        camera.interval = new Interval(camera);
+        camera.slider = slider;
+        camera.io = io;
+        camera.getSettings();
+        
+        return camera;
     }
 }

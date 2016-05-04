@@ -1,6 +1,7 @@
 var fs = require('fs');
 var exec = require('child_process').exec;
 var config = require('./config');
+var gpio = require('rpi-gpio');
 
 function Camera(camera) {
     this.camera = camera;
@@ -8,7 +9,7 @@ function Camera(camera) {
     this.interval = null;
     this.slider = null;
     this.io = null;
-    this.name = "";
+    this.name = "Default camera";
     
     this.aperture = null;
     this.speed = null;
@@ -80,9 +81,9 @@ Camera.prototype = {
         }
     },
     takePicture: function(histogram) {
+        var cameraObj = this;
+        
         if(this.camera != null) {
-            var cameraObj = this;
-            
             var download = histogram && !this.busy;
             if(download) {
                 console.log("take picture ... start downloading picture");
@@ -112,6 +113,9 @@ Camera.prototype = {
                 });
             });
         }
+        else {
+            cameraObj.releaseShutter();
+        }
     },
     testShoot: function() {
         this.setParams();
@@ -124,6 +128,23 @@ Camera.prototype = {
                 cameraObj.resetParams();
             }, 1000);
         }, 1000);
+    },
+    releaseShutter: function(release) {
+        var cameraObj = this;
+        var release = typeof release !== 'undefined' ?  release : true;
+        
+        gpio.write(config.shutterFocusPin, release, function(err) {
+            if (err) throw err;
+        });
+        gpio.write(config.shutterReleasePin, release, function(err) {
+            if (err) throw err;
+        });
+        
+        if(release) {
+            setTimeout(function() {
+                cameraObj.releaseShutter(false);
+            }, config.shutterPressedTime);
+        }
     },
     changeAperture: function(newAperture) {
         if(this.camera != null) {

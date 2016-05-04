@@ -5,7 +5,7 @@
     "intervalInterval": 10,
     "intervalShots": 250,
     "shutterFocusPin": 7,
-    "shutterReleasePin": 11,
+    "shutterReleasePin": 8,
     "shutterPressedTime": 200,
     "sliderPinLeft": 16,
     "sliderPinRight": 15,
