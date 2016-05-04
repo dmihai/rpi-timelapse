@@ -73,7 +73,7 @@ module.exports = {
             return false;
         
         return cam1.camera == cam2.camera && cam1.port == cam2.port;
-    }
+    },
     newCamera: function(gPhotoCamera) {
         camera = new Camera(gPhotoCamera);
         camera.interval = new Interval(camera);
