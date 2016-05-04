@@ -53,6 +53,9 @@ module.exports = {
     },
     removeCamera: function(camArr, newList) {
         for(i = 0; i < camArr.length; i++) {
+            if(camArr[i].interval.isStarted)
+                continue;
+            
             found = false;
             for(j = 0; j < newList.length; j++) {
                 if(this.checkCameras(newList[j], camArr[i].camera)) {
